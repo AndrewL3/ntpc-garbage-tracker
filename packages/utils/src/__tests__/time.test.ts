@@ -14,7 +14,7 @@ describe("parseNtcTimestamp", () => {
 
   it("throws on invalid timestamp format", () => {
     expect(() => parseNtcTimestamp("2026-02-26 14:30:00")).toThrow(
-      'Invalid NTC timestamp',
+      "Invalid NTC timestamp",
     );
   });
 });

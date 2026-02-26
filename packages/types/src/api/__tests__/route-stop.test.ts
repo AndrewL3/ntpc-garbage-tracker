@@ -51,13 +51,31 @@ describe("RouteStopRawSchema", () => {
 
     // index: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
     expect(transformed.garbageDays).toEqual([
-      false, true, true, false, true, true, true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
     ]);
     expect(transformed.recyclingDays).toEqual([
-      false, true, false, false, true, false, false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
     ]);
     expect(transformed.foodscrapsDays).toEqual([
-      false, true, true, false, true, true, true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
     ]);
   });
 

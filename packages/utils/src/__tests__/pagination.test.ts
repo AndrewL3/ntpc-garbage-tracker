@@ -16,7 +16,10 @@ describe("paginateAll", () => {
   });
 
   it("returns empty array when first page is empty", async () => {
-    const fetcher = async (_page: number, _size: number): Promise<number[]> => [];
+    const fetcher = async (
+      _page: number,
+      _size: number,
+    ): Promise<number[]> => [];
 
     const results = await paginateAll(fetcher, 10);
     expect(results).toEqual([]);

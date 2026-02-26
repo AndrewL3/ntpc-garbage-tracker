@@ -1,8 +1,6 @@
 import { z } from "zod";
 
-const dayFlag = z
-  .string()
-  .transform((v) => v === "Y");
+const dayFlag = z.string().transform((v) => v === "Y");
 
 export const RouteStopRawSchema = z.object({
   city: z.string(),
@@ -71,18 +69,30 @@ export function transformRouteStop(raw: RouteStopRaw): RouteStop {
     scheduledTime: raw.time,
     memo: raw.memo,
     garbageDays: [
-      raw.garbagesunday, raw.garbagemonday, raw.garbagetuesday,
-      raw.garbagewednesday, raw.garbagethursday, raw.garbagefriday,
+      raw.garbagesunday,
+      raw.garbagemonday,
+      raw.garbagetuesday,
+      raw.garbagewednesday,
+      raw.garbagethursday,
+      raw.garbagefriday,
       raw.garbagesaturday,
     ],
     recyclingDays: [
-      raw.recyclingsunday, raw.recyclingmonday, raw.recyclingtuesday,
-      raw.recyclingwednesday, raw.recyclingthursday, raw.recyclingfriday,
+      raw.recyclingsunday,
+      raw.recyclingmonday,
+      raw.recyclingtuesday,
+      raw.recyclingwednesday,
+      raw.recyclingthursday,
+      raw.recyclingfriday,
       raw.recyclingsaturday,
     ],
     foodscrapsDays: [
-      raw.foodscrapssunday, raw.foodscrapsmonday, raw.foodscrapstuesday,
-      raw.foodscrapswednesday, raw.foodscrapsthursday, raw.foodscrapsfriday,
+      raw.foodscrapssunday,
+      raw.foodscrapsmonday,
+      raw.foodscrapstuesday,
+      raw.foodscrapswednesday,
+      raw.foodscrapsthursday,
+      raw.foodscrapsfriday,
       raw.foodscrapssaturday,
     ],
   };
