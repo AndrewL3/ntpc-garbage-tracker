@@ -1,0 +1,18 @@
+{
+  "name": "@tracker/config",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.js",
+    "./prettier": "./prettier.js"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10",
+    "eslint-plugin-react": "^7",
+    "eslint-plugin-react-hooks": "^5",
+    "typescript-eslint": "^8"
+  }
+}
