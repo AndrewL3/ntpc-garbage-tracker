@@ -1,0 +1,9 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+
+export default async function handler(
+  _req: VercelRequest,
+  res: VercelResponse,
+) {
+  // TODO: Read live vehicle positions from Redis or NTC API
+  res.status(200).json({ ok: true, data: [] });
+}
