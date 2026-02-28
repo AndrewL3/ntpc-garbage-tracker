@@ -1,0 +1,31 @@
+import {
+  RouteStopRawSchema,
+  transformRouteStop,
+  type RouteStop,
+} from "@tracker/types";
+import { paginateAll } from "@tracker/utils";
+
+const NTC_STOPS_URL =
+  "https://data.ntpc.gov.tw/api/datasets/edc3ad26-8ae7-4916-a00b-bc6048d19bf8/json";
+
+export async function fetchStaticStops(): Promise<RouteStop[]> {
+  const raw = await paginateAll(async (page, size) => {
+    const res = await fetch(`${NTC_STOPS_URL}?page=${page}&size=${size}`);
+    if (!res.ok) {
+      throw new Error(`NTC Stops API error: ${res.status} ${res.statusText}`);
+    }
+    return (await res.json()) as unknown[];
+  });
+
+  const valid: RouteStop[] = [];
+  for (const item of raw) {
+    const parsed = RouteStopRawSchema.safeParse(item);
+    if (parsed.success) {
+      valid.push(transformRouteStop(parsed.data));
+    } else {
+      console.warn("Skipping invalid stop record:", parsed.error.message);
+    }
+  }
+
+  return valid;
+}
