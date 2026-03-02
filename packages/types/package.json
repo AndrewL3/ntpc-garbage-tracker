@@ -11,8 +11,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "drizzle-orm": "^0.38",
     "zod": "^3"
+  },
+  "peerDependencies": {
+    "drizzle-orm": "^0.38"
   },
   "devDependencies": {
     "@jest/globals": "^29",
