@@ -46,7 +46,7 @@ export default function RouteProgressView() {
 
   if (isLoading) {
     return (
-      <div className="flex h-dvh flex-col">
+      <div className="flex h-dvh flex-col bg-background">
         <div className="border-border flex items-center gap-3 border-b px-4 py-3">
           <Skeleton className="h-6 w-6" />
           <Skeleton className="h-6 w-32" />
@@ -93,7 +93,7 @@ export default function RouteProgressView() {
   }
 
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-dvh flex-col bg-background">
       {/* Sticky glass header */}
       <div className="glass sticky top-0 z-10 flex items-center gap-3 px-4 py-3">
         <Button

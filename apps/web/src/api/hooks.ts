@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchNearbyStops, fetchRouteList, fetchRouteDetail } from "./client";
 
 /** Round to 4 decimals (~11m) to prevent cache key explosion on map pan */
@@ -19,6 +19,7 @@ export function useNearbyStops(
     queryFn: () => fetchNearbyStops(sLat!, sLon!, radius),
     enabled: sLat !== null && sLon !== null,
     staleTime: 30_000,
+    placeholderData: keepPreviousData,
   });
 }
 
