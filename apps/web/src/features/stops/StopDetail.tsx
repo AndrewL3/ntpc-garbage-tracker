@@ -16,6 +16,7 @@ export default function StopDetail({ stop, onClose }: StopDetailProps) {
   return (
     <Drawer open={stop !== null} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent>
+        <div className="h-1 w-10 mx-auto mt-2 rounded-full bg-primary/30" />
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-lg">{stop?.name}</DrawerTitle>
           <p className="text-muted-foreground text-sm">
