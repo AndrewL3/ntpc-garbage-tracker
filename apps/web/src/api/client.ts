@@ -33,6 +33,8 @@ export interface AnnotatedStop {
   collectsToday: string[];
   passedAt: string | null;
   eta: string | null;
+  latitude: number;
+  longitude: number;
 }
 
 export interface RouteProgress {
