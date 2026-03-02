@@ -1,17 +1,20 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useTheme } from "@/lib/theme";
-import { useNearbyStops } from "@/api/hooks";
+import { useNearbyStops, useRouteDetail } from "@/api/hooks";
+import MapControls from "./MapControls";
 import StopMarker from "./StopMarker";
 import StopPopup from "./StopPopup";
+import RoutePolyline from "./RoutePolyline";
+import TruckMarker from "./TruckMarker";
 import UserLocationMarker from "./UserLocationMarker";
 import StopDetail from "@/features/stops/StopDetail";
-import MapControls from "./MapControls";
 import type { NearbyStop } from "@/api/client";
 
-const LIGHT_TILES = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+const LIGHT_TILES =
+  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 const DARK_TILES =
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 const ATTRIBUTION =
@@ -58,7 +61,36 @@ export default function MapView() {
   const queryPos = mapCenter ?? position;
   const { data: stops } = useNearbyStops(queryPos.lat, queryPos.lon);
 
+  // Fetch route detail when a stop is selected (for polyline + status colors)
+  const { data: routeDetail } = useRouteDetail(selectedStop?.routeLineId);
+
   const handleDeselect = useCallback(() => setSelectedStop(null), []);
+
+  // Build a status map for stops when route data is available
+  const stopStatusMap = useMemo(() => {
+    if (!routeDetail || !selectedStop) return new Map<string, "passed" | "active" | "upcoming">();
+    const map = new Map<string, "passed" | "active" | "upcoming">();
+    for (const s of routeDetail.stops) {
+      const key = `${selectedStop.routeLineId}-${s.rank}`;
+      if (s.passedAt !== null) {
+        map.set(key, "passed");
+      } else if (s.rank === routeDetail.progress.leadingStopRank) {
+        map.set(key, "active");
+      } else {
+        map.set(key, "upcoming");
+      }
+    }
+    return map;
+  }, [routeDetail, selectedStop]);
+
+  // Find truck position (leading stop coords)
+  const truckPosition = useMemo(() => {
+    if (!routeDetail || routeDetail.progress.status !== "active") return null;
+    const leading = routeDetail.stops.find(
+      (s) => s.rank === routeDetail.progress.leadingStopRank,
+    );
+    return leading ? { lat: leading.latitude, lon: leading.longitude } : null;
+  }, [routeDetail]);
 
   return (
     <>
@@ -78,17 +110,34 @@ export default function MapView() {
         {located && (
           <UserLocationMarker lat={position.lat} lon={position.lon} />
         )}
-        {stops?.map((stop) => (
-          <StopMarker
-            key={`${stop.routeLineId}-${stop.rank}`}
-            stop={stop}
-            selected={
-              selectedStop?.routeLineId === stop.routeLineId &&
-              selectedStop?.rank === stop.rank
-            }
-            onSelect={setSelectedStop}
-          />
-        ))}
+
+        {/* Route polyline when a stop is selected */}
+        {routeDetail && selectedStop && (
+          <RoutePolyline stops={routeDetail.stops} />
+        )}
+
+        {/* Truck marker */}
+        {truckPosition && (
+          <TruckMarker lat={truckPosition.lat} lon={truckPosition.lon} />
+        )}
+
+        {stops?.map((stop) => {
+          const key = `${stop.routeLineId}-${stop.rank}`;
+          const status = stopStatusMap.get(key);
+          return (
+            <StopMarker
+              key={key}
+              stop={stop}
+              selected={
+                selectedStop?.routeLineId === stop.routeLineId &&
+                selectedStop?.rank === stop.rank
+              }
+              onSelect={setSelectedStop}
+              status={status}
+            />
+          );
+        })}
+
         {/* Desktop: Leaflet Popup anchored near the marker */}
         {isDesktop && selectedStop && (
           <StopPopup stop={selectedStop} onClose={handleDeselect} />
