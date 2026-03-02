@@ -14,6 +14,7 @@ export default async function handler(
     "SUPABASE_DB_URL",
     "UPSTASH_REDIS_REST_URL",
     "UPSTASH_REDIS_REST_TOKEN",
+    "CRON_SECRET",
   ];
   for (const name of envVars) {
     checks[name] = { ok: !!process.env[name] };

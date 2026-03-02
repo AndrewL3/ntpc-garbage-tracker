@@ -15,6 +15,21 @@ export default async function handler(
   _req: VercelRequest,
   res: VercelResponse,
 ) {
+  // Method check: only accept POST
+  if (_req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  }
+
+  // Auth check: validate CRON_SECRET bearer token (skip if env var not set)
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret) {
+    const authHeader = _req.headers.authorization;
+    if (authHeader !== `Bearer ${cronSecret}`) {
+      return res.status(401).json({ ok: false, error: "Unauthorized" });
+    }
+  }
+
   try {
     // 1. Fetch live GPS
     let gpsPoints: VehicleGps[];

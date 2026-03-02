@@ -4,7 +4,8 @@
   "globalEnv": [
     "SUPABASE_DB_URL",
     "UPSTASH_REDIS_REST_URL",
-    "UPSTASH_REDIS_REST_TOKEN"
+    "UPSTASH_REDIS_REST_TOKEN",
+    "CRON_SECRET"
   ],
   "tasks": {
     "build": {
