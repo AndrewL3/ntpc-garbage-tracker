@@ -16,6 +16,7 @@ export default function StopMarker({
     <CircleMarker
       center={[stop.latitude, stop.longitude]}
       radius={selected ? 10 : 6}
+      bubblingMouseEvents={false}
       pathOptions={{
         color: selected ? "#ca8a04" : "#eab308",
         fillColor: "#eab308",
