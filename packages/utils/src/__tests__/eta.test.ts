@@ -129,6 +129,50 @@ describe("computeEtaDelta", () => {
     expect(result.stops[1].eta).toBe("2026-03-01T15:32:00+08:00");
   });
 
+  it("enforces monotonicity — marks all stops up to leading rank as passed even with gaps in pass events", () => {
+    const stops = [
+      makeStop(1, "17:27"),
+      makeStop(2, "17:30"),
+      makeStop(3, "17:35"),
+      makeStop(4, "17:41"),
+      makeStop(5, "17:42"),
+    ];
+    // Gap: pass events exist for ranks 1, 4, 5 but NOT 2, 3
+    // (simulates old inference code that didn't backfill)
+    const events: PassEvent[] = [
+      {
+        stopRank: 1,
+        car: "KEG-2913",
+        passedAt: new Date("2026-03-01T09:27:14.000Z"), // 17:27:14 Taipei
+      },
+      {
+        stopRank: 4,
+        car: "KEG-2913",
+        passedAt: new Date("2026-03-01T09:41:14.000Z"), // 17:41:14 Taipei
+      },
+      {
+        stopRank: 5,
+        car: "KEG-2913",
+        passedAt: new Date("2026-03-01T09:42:42.000Z"), // 17:42:42 Taipei
+      },
+    ];
+    const result = computeEtaDelta(stops, events, today, dow);
+
+    expect(result.progress.leadingStopRank).toBe(5);
+    expect(result.progress.status).toBe("completed");
+
+    // ALL stops up to leading rank (5) must show as passed — no gaps
+    expect(result.stops[0].passedAt).not.toBeNull(); // rank 1: has event
+    expect(result.stops[1].passedAt).not.toBeNull(); // rank 2: NO event, but must be passed (monotonic)
+    expect(result.stops[2].passedAt).not.toBeNull(); // rank 3: NO event, but must be passed (monotonic)
+    expect(result.stops[3].passedAt).not.toBeNull(); // rank 4: has event
+    expect(result.stops[4].passedAt).not.toBeNull(); // rank 5: has event
+
+    // Gap stops should NOT show ETA (they're passed)
+    expect(result.stops[1].eta).toBeNull();
+    expect(result.stops[2].eta).toBeNull();
+  });
+
   it("skips ETA for stops with unparseable scheduledTime", () => {
     const stops = [
       makeStop(1, "15:30"),

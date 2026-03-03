@@ -83,6 +83,22 @@ export function computeEtaDelta(
     }
   }
 
+  // Enforce monotonicity: if leading stop is at rank N, all stops 1..N must
+  // be passed. Fill gaps with the timestamp of the nearest forward stop.
+  // (Stops array is pre-sorted by rank ascending.)
+  if (leadingStopRank !== null) {
+    let fillTime: Date | null = null;
+    for (let i = stops.length - 1; i >= 0; i--) {
+      if (stops[i].rank > leadingStopRank) continue;
+      const existing = passedMap.get(stops[i].rank);
+      if (existing) {
+        fillTime = existing;
+      } else if (fillTime !== null) {
+        passedMap.set(stops[i].rank, fillTime);
+      }
+    }
+  }
+
   // Compute delta
   let deltaMs: number | null = null;
   let deltaMinutes: number | null = null;
