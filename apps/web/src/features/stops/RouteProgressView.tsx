@@ -8,28 +8,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouteDetail } from "@/api/hooks";
 import ErrorMessage from "@/components/ErrorMessage";
 
-const COLLECTION_ICONS: Record<
-  string,
-  { icon: typeof Trash2; label: string; classes: string }
-> = {
-  garbage: {
-    icon: Trash2,
-    label: "Garbage",
-    classes:
-      "bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300",
-  },
-  recycling: {
-    icon: Recycle,
-    label: "Recycling",
-    classes: "bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-300",
-  },
-  foodScraps: {
-    icon: Apple,
-    label: "Food Scraps",
-    classes:
-      "bg-emerald-100 text-emerald-700 dark:bg-emerald-800 dark:text-emerald-300",
-  },
-};
+const COLLECTION_ICONS: Record<string, { icon: typeof Trash2; title: string }> =
+  {
+    garbage: { icon: Trash2, title: "Garbage" },
+    recycling: { icon: Recycle, title: "Recycling" },
+    foodScraps: { icon: Apple, title: "Food Scraps" },
+  };
 
 export default function RouteProgressView() {
   const { lineId } = useParams<{ lineId: string }>();
@@ -37,7 +21,6 @@ export default function RouteProgressView() {
   const { data, isLoading, isError, refetch } = useRouteDetail(lineId);
   const truckRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to truck position on load
   useEffect(() => {
     if (data && truckRef.current) {
       truckRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -47,7 +30,7 @@ export default function RouteProgressView() {
   if (isLoading) {
     return (
       <div className="flex h-dvh flex-col bg-background">
-        <div className="border-border flex items-center gap-3 border-b px-4 py-3">
+        <div className="flex items-center gap-3 bg-background px-4 py-3 shadow-sm">
           <Skeleton className="h-6 w-6" />
           <Skeleton className="h-6 w-32" />
         </div>
@@ -62,7 +45,7 @@ export default function RouteProgressView() {
 
   if (isError) {
     return (
-      <div className="flex h-dvh flex-col items-center justify-center">
+      <div className="flex h-dvh flex-col items-center justify-center bg-background">
         <ErrorMessage
           message="Failed to load route"
           onRetry={() => refetch()}
@@ -76,7 +59,7 @@ export default function RouteProgressView() {
 
   if (!data) {
     return (
-      <div className="flex h-dvh flex-col items-center justify-center gap-4">
+      <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-background">
         <p className="text-muted-foreground">Route not found</p>
         <Button variant="outline" onClick={() => navigate(-1)}>
           Go back
@@ -94,8 +77,8 @@ export default function RouteProgressView() {
 
   return (
     <div className="flex h-dvh flex-col bg-background">
-      {/* Sticky glass header */}
-      <div className="glass sticky top-0 z-10 flex items-center gap-3 px-4 py-3">
+      {/* Sticky header — solid surface with shadow */}
+      <div className="sticky top-0 z-10 flex items-center gap-3 bg-background px-4 py-3 shadow-sm">
         <Button
           variant="ghost"
           size="icon"
@@ -105,7 +88,7 @@ export default function RouteProgressView() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="min-w-0 flex-1">
-          <h1 className="truncate text-lg font-semibold">{route.lineName}</h1>
+          <h1 className="truncate text-xl font-bold">{route.lineName}</h1>
           <div className="flex items-center gap-2 text-sm">
             {progress.deltaMinutes != null && (
               <Badge
@@ -145,45 +128,57 @@ export default function RouteProgressView() {
           {stops.map((stop, i) => {
             const passed = stop.passedAt !== null;
             const isLeading = stop.rank === progress.leadingStopRank;
-            const showTruck =
-              progress.status === "active" && isLeading && i < stops.length - 1;
+            const isActive = isLeading && progress.status === "active";
+            const showTruck = isActive && i < stops.length - 1;
 
             return (
               <div key={stop.rank}>
                 {/* Stop node */}
-                <div className="flex items-start gap-3">
+                <div className={`flex items-start gap-3 ${passed && !isActive ? "opacity-50" : ""}`}>
                   {/* Timeline dot + line */}
-                  <div className="flex w-5 flex-col items-center">
+                  <div className="flex w-6 flex-col items-center">
                     {/* Dot */}
                     <div
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                        passed
-                          ? "bg-primary text-primary-foreground"
-                          : isLeading && progress.status === "active"
-                            ? "border-2 border-primary bg-primary/20"
-                            : "border-2 border-muted-foreground/40 bg-background"
+                      className={`flex shrink-0 items-center justify-center rounded-full ${
+                        isActive
+                          ? "h-7 w-7 border-2 border-primary bg-primary/20"
+                          : passed
+                            ? "h-6 w-6 bg-primary text-primary-foreground"
+                            : "h-6 w-6 border-2 border-muted-foreground/30 bg-background"
                       }`}
                     >
-                      {passed && <Check className="h-3 w-3" strokeWidth={3} />}
+                      {passed && !isActive && (
+                        <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                      )}
                     </div>
                     {/* Connecting line */}
                     {i < stops.length - 1 && (
                       <div
-                        className={`w-0.5 flex-1 ${
+                        className={`flex-1 ${
                           passed && stops[i + 1]?.passedAt
-                            ? "bg-primary"
-                            : "border-border border-l-2 border-dashed bg-transparent"
+                            ? "w-1 bg-primary"
+                            : "w-0.5 border-l-2 border-dashed border-muted-foreground/20 bg-transparent"
                         }`}
-                        style={{ minHeight: "2rem" }}
+                        style={{ minHeight: "2.5rem" }}
                       />
                     )}
                   </div>
 
                   {/* Stop info */}
-                  <div className="min-w-0 flex-1 pb-4">
+                  <div className="min-w-0 flex-1 pb-5">
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className="truncate font-medium">{stop.name}</span>
-                      <span className="text-muted-foreground shrink-0 tabular-nums text-sm">
+                      <span className={`truncate ${isActive ? "text-base font-bold" : "font-medium"}`}>
+                        {stop.name}
+                      </span>
+                      <span
+                        className={`shrink-0 tabular-nums text-sm ${
+                          passed
+                            ? "text-muted-foreground"
+                            : stop.eta
+                              ? "font-medium text-primary"
+                              : ""
+                        }`}
+                      >
                         {passed
                           ? formatTime(stop.passedAt!)
                           : stop.eta
@@ -191,21 +186,19 @@ export default function RouteProgressView() {
                             : stop.scheduledTime}
                       </span>
                     </div>
+                    {/* Collection type icons — compact row */}
                     {stop.collectsToday.length > 0 && (
-                      <div className="mt-1 flex gap-1">
+                      <div className="mt-1 flex gap-1.5">
                         {stop.collectsToday.map((type) => {
                           const info = COLLECTION_ICONS[type];
                           if (!info) return null;
                           const Icon = info.icon;
                           return (
-                            <Badge
+                            <Icon
                               key={type}
-                              variant="outline"
-                              className={`gap-1 border-0 text-xs ${info.classes}`}
-                            >
-                              <Icon className="h-3 w-3" />
-                              {info.label}
-                            </Badge>
+                              className="h-3.5 w-3.5 text-muted-foreground"
+                              aria-label={info.title}
+                            />
                           );
                         })}
                       </div>
@@ -217,10 +210,10 @@ export default function RouteProgressView() {
                 {showTruck && (
                   <div
                     ref={truckRef}
-                    className="ml-7 mb-2 flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-1.5"
+                    className="ml-8 mb-3 flex items-center gap-2 rounded-xl border-l-4 border-primary bg-gradient-to-r from-primary/10 to-primary/5 px-4 py-2.5"
                   >
                     <Truck className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium text-primary">
+                    <span className="text-sm font-semibold text-primary">
                       Truck is here
                     </span>
                   </div>

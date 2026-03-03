@@ -16,15 +16,15 @@ export default function StopDetail({ stop, onClose }: StopDetailProps) {
   return (
     <Drawer open={stop !== null} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent>
-        <div className="h-1 w-10 mx-auto mt-2 rounded-full bg-primary/30" />
+        <div className="h-1 w-10 mx-auto mt-2 rounded-full bg-muted-foreground/20" />
         <DrawerHeader className="text-left">
-          <DrawerTitle className="text-lg">{stop?.name}</DrawerTitle>
+          <DrawerTitle className="text-lg font-bold">{stop?.name}</DrawerTitle>
           <p className="text-muted-foreground text-sm">
             {stop?.routeLineName}
           </p>
         </DrawerHeader>
 
-        <div className="px-4 pb-6">
+        <div className="px-5 pb-8">
           {stop && <StopDetailContent stop={stop} onClose={onClose} />}
         </div>
       </DrawerContent>

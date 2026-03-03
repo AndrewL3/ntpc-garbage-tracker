@@ -124,6 +124,9 @@ export default function MapView() {
         {stops?.map((stop) => {
           const key = `${stop.routeLineId}-${stop.rank}`;
           const status = stopStatusMap.get(key);
+          const faded =
+            selectedStop !== null &&
+            stop.routeLineId !== selectedStop.routeLineId;
           return (
             <StopMarker
               key={key}
@@ -134,6 +137,7 @@ export default function MapView() {
               }
               onSelect={setSelectedStop}
               status={status}
+              faded={faded}
             />
           );
         })}

@@ -1,17 +1,13 @@
 import { Outlet } from "react-router";
-import Sidebar from "./Sidebar";
+import Navigation from "./Navigation";
 
 export default function AppLayout() {
   return (
-    <div className="flex h-dvh flex-col md:flex-row">
-      {/* Desktop: sidebar on left (order-first by default) */}
-      {/* Mobile: bar at bottom (order-last) */}
-      <div className="order-last md:order-first">
-        <Sidebar />
-      </div>
+    <div className="relative flex h-dvh flex-col">
       <div className="flex-1 isolate overflow-hidden">
         <Outlet />
       </div>
+      <Navigation />
     </div>
   );
 }
