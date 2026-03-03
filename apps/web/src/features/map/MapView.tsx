@@ -53,9 +53,20 @@ export default function MapView() {
     lon: number;
   } | null>(null);
   const [selectedStop, setSelectedStop] = useState<NearbyStop | null>(null);
+  // Guard: prevent map click from deselecting immediately after marker click
+  // (mobile touch devices can fire both marker click and map click in sequence)
+  const selectingRef = useRef(false);
 
   const handleMoveEnd = useCallback((lat: number, lon: number) => {
     setMapCenter({ lat, lon });
+  }, []);
+
+  const handleSelect = useCallback((stop: NearbyStop) => {
+    selectingRef.current = true;
+    setSelectedStop(stop);
+    requestAnimationFrame(() => {
+      selectingRef.current = false;
+    });
   }, []);
 
   const queryPos = mapCenter ?? position;
@@ -64,7 +75,10 @@ export default function MapView() {
   // Fetch route detail when a stop is selected (for polyline + status colors)
   const { data: routeDetail } = useRouteDetail(selectedStop?.routeLineId);
 
-  const handleDeselect = useCallback(() => setSelectedStop(null), []);
+  const handleDeselect = useCallback(() => {
+    if (selectingRef.current) return;
+    setSelectedStop(null);
+  }, []);
 
   // Build a status map for stops when route data is available
   const stopStatusMap = useMemo(() => {
@@ -135,7 +149,7 @@ export default function MapView() {
                 selectedStop?.routeLineId === stop.routeLineId &&
                 selectedStop?.rank === stop.rank
               }
-              onSelect={setSelectedStop}
+              onSelect={handleSelect}
               status={status}
               faded={faded}
             />

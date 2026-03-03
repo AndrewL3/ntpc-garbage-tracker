@@ -40,7 +40,13 @@ export default function StopMarker({
         opacity: faded ? 0.2 : 1,
       }}
       eventHandlers={{
-        click: () => onSelect(stop),
+        click: (e) => {
+          // Stop DOM event propagation so the map's container click handler
+          // doesn't fire a second "map click" → deselect on mobile touch devices
+          const me = e as unknown as { originalEvent?: Event };
+          me.originalEvent?.stopPropagation();
+          onSelect(stop);
+        },
       }}
     >
       {!faded && (
