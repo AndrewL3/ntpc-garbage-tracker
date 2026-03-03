@@ -31,16 +31,46 @@ export default async function handler(
   }
 
   try {
+    const startMs = Date.now();
+
+    async function logSync(entry: Record<string, unknown>) {
+      try {
+        const p = redis.pipeline();
+        p.lpush(
+          "admin:sync_log",
+          JSON.stringify({ ...entry, durationMs: Date.now() - startMs }),
+        );
+        p.ltrim("admin:sync_log", 0, 99);
+        await p.exec();
+      } catch {
+        /* never break sync */
+      }
+    }
+
     // 1. Fetch live GPS
     let gpsPoints: VehicleGps[];
     try {
       gpsPoints = await fetchLiveGps();
     } catch (err) {
       console.error("NTC API fetch failed:", err);
+      await logSync({
+        timestamp: new Date().toISOString(),
+        vehicles: 0,
+        routes: 0,
+        newPassEvents: 0,
+        error: "NTC API unreachable",
+      });
       return res.status(500).json({ ok: false, error: "NTC API unreachable" });
     }
 
     if (gpsPoints.length === 0) {
+      await logSync({
+        timestamp: new Date().toISOString(),
+        vehicles: 0,
+        routes: 0,
+        newPassEvents: 0,
+        error: null,
+      });
       return res.status(200).json({ ok: true, vehicles: 0 });
     }
 
@@ -91,6 +121,13 @@ export default async function handler(
         }
       } catch (err) {
         console.error("Redis MGET failed:", err);
+        await logSync({
+          timestamp: new Date().toISOString(),
+          vehicles: gpsPoints.length,
+          routes: 0,
+          newPassEvents: 0,
+          error: "Redis read failed",
+        });
         return res.status(500).json({ ok: false, error: "Redis read failed" });
       }
     }
@@ -131,6 +168,13 @@ export default async function handler(
         totalPassEvents = allPassEvents.length;
       } catch (err) {
         console.error("Supabase write failed:", err);
+        await logSync({
+          timestamp: new Date().toISOString(),
+          vehicles: gpsPoints.length,
+          routes: byLine.size,
+          newPassEvents: 0,
+          error: "DB write failed",
+        });
         return res.status(500).json({ ok: false, error: "DB write failed" });
       }
     }
@@ -150,6 +194,15 @@ export default async function handler(
       // PassEvents already written — log but don't fail
       // Next tick will read stale rank but onConflictDoNothing prevents duplicates
     }
+
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      vehicles: gpsPoints.length,
+      routes: byLine.size,
+      newPassEvents: totalPassEvents,
+      error: null,
+    };
+    await logSync(logEntry);
 
     return res.status(200).json({
       ok: true,
