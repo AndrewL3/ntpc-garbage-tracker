@@ -103,7 +103,9 @@ export default function MapView() {
     const leading = routeDetail.stops.find(
       (s) => s.rank === routeDetail.progress.leadingStopRank,
     );
-    return leading ? { lat: leading.latitude, lon: leading.longitude } : null;
+    if (!leading || leading.latitude == null || leading.longitude == null)
+      return null;
+    return { lat: leading.latitude, lon: leading.longitude };
   }, [routeDetail]);
 
   return (

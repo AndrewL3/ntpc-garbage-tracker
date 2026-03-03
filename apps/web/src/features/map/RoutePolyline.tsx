@@ -6,13 +6,18 @@ interface RoutePolylineProps {
 }
 
 export default function RoutePolyline({ stops }: RoutePolylineProps) {
-  if (stops.length < 2) return null;
+  // Filter to stops with valid coordinates (API may omit them)
+  const geoStops = stops.filter(
+    (s): s is AnnotatedStop & { latitude: number; longitude: number } =>
+      s.latitude != null && s.longitude != null,
+  );
+  if (geoStops.length < 2) return null;
 
   // Split stops into passed and upcoming segments
   const passedCoords: [number, number][] = [];
   const upcomingCoords: [number, number][] = [];
 
-  for (const stop of stops) {
+  for (const stop of geoStops) {
     const coord: [number, number] = [stop.latitude, stop.longitude];
     if (stop.passedAt !== null) {
       passedCoords.push(coord);
