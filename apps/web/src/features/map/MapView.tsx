@@ -1,5 +1,10 @@
 import { useState, useCallback, useRef, useMemo } from "react";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  useMapEvents,
+  AttributionControl,
+} from "react-leaflet";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useTheme } from "@/lib/theme";
@@ -115,12 +120,14 @@ export default function MapView() {
         zoom={16}
         className="h-full w-full"
         zoomControl={false}
+        attributionControl={false}
       >
         <TileLayer
           key={isDark ? "dark" : "light"}
           url={isDark ? DARK_TILES : LIGHT_TILES}
           attribution={ATTRIBUTION}
         />
+        <AttributionControl position="bottomright" prefix={false} />
         <MapEvents onMoveEnd={handleMoveEnd} onDeselect={handleDeselect} />
         <MapControls userLat={position.lat} userLon={position.lon} />
         {located && (
