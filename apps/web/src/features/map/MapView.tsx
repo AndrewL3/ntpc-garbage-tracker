@@ -114,7 +114,7 @@ export default function MapView() {
   }, [routeDetail]);
 
   return (
-    <>
+    <div className="h-full w-full overflow-hidden">
       <MapContainer
         center={[position.lat, position.lon]}
         zoom={16}
@@ -181,6 +181,6 @@ export default function MapView() {
       {!isDesktop && (
         <StopDetail stop={selectedStop} onClose={handleDeselect} />
       )}
-    </>
+    </div>
   );
 }

@@ -58,7 +58,7 @@ export default function SchedulesView() {
   }, [routes, search]);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-background">
       {/* Header — solid surface, shadow */}
       <div className="sticky top-0 z-10 space-y-3 bg-background px-4 py-4 shadow-sm md:pl-48">
         <h1 className="text-2xl font-bold">{t("schedules.heading")}</h1>
