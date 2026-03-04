@@ -12,7 +12,6 @@ import { useNearbyStops, useRouteDetail } from "@/api/hooks";
 import MapControls from "./MapControls";
 import StopMarker from "./StopMarker";
 import StopPopup from "./StopPopup";
-import RoutePolyline from "./RoutePolyline";
 import TruckMarker from "./TruckMarker";
 import UserLocationMarker from "./UserLocationMarker";
 import StopDetail from "@/features/stops/StopDetail";
@@ -134,11 +133,6 @@ export default function MapView() {
           <UserLocationMarker lat={position.lat} lon={position.lon} />
         )}
 
-        {/* Route polyline when a stop is selected */}
-        {routeDetail && selectedStop && (
-          <RoutePolyline stops={routeDetail.stops} />
-        )}
-
         {/* Truck marker */}
         {truckPosition && (
           <TruckMarker lat={truckPosition.lat} lon={truckPosition.lon} />
@@ -147,6 +141,7 @@ export default function MapView() {
         {stops?.map((stop) => {
           const key = `${stop.routeLineId}-${stop.rank}`;
           const status = stopStatusMap.get(key);
+          const selectedRouteLineId = selectedStop?.routeLineId ?? null;
           const faded =
             selectedStop !== null &&
             stop.routeLineId !== selectedStop.routeLineId;
@@ -161,6 +156,7 @@ export default function MapView() {
               onSelect={handleSelect}
               status={status}
               faded={faded}
+              selectedRouteLineId={selectedRouteLineId}
             />
           );
         })}
