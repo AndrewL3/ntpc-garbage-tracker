@@ -63,8 +63,8 @@ export default function RoutePolyline({
           positions={passed}
           pathOptions={{
             color: routeColor,
-            weight: 4,
-            opacity: 0.7,
+            weight: 5,
+            opacity: 0.85,
           }}
         />
       )}
@@ -73,8 +73,8 @@ export default function RoutePolyline({
           positions={upcoming}
           pathOptions={{
             color: routeColor,
-            weight: 3,
-            opacity: 0.3,
+            weight: 4,
+            opacity: 0.5,
             dashArray: "8 6",
           }}
         />
