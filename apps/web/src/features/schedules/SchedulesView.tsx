@@ -75,7 +75,7 @@ export default function SchedulesView() {
 
       {/* Route list */}
       <ScrollArea className="flex-1">
-        <div className="flex flex-col gap-3 p-4 md:pl-48">
+        <div className="flex flex-col gap-3 bg-background p-4 md:pl-48">
           {isError && (
             <ErrorMessage
               message={t("schedules.failedToLoad")}
