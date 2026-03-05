@@ -4,8 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getRegisteredModules } from "../module-registry";
 import ShellLayout from "./ShellLayout";
 import ReloadPrompt from "@/components/ReloadPrompt";
+import SharedMapView from "../map/SharedMapView";
 
-const MapView = lazy(() => import("@/modules/garbage/map/MapView"));
 const RouteProgressView = lazy(
   () => import("@/modules/garbage/stops/RouteProgressView"),
 );
@@ -27,7 +27,7 @@ export default function AppShell() {
       <Suspense fallback={<PageSkeleton />}>
         <Routes>
           <Route element={<ShellLayout modules={modules} />}>
-            <Route index element={<MapView />} />
+            <Route index element={<SharedMapView />} />
             {/* Explicit props instead of {...route} spread — RouteObject.lazy
                 and <Route lazy> have incompatible types in React Router v7 */}
             {modules.flatMap((mod) =>
