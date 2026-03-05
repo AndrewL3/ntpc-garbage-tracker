@@ -9,12 +9,12 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useTheme } from "@/lib/theme";
 import { useNearbyStops, useRouteDetail } from "../api/hooks";
-import MapControls from "./MapControls";
+import MapControls from "@/core/map/MapControls";
 import StopMarker from "./StopMarker";
 import StopPopup from "./StopPopup";
 import RoutePolyline from "./RoutePolyline";
 import TruckMarker from "./TruckMarker";
-import UserLocationMarker from "./UserLocationMarker";
+import UserLocationMarker from "@/core/map/UserLocationMarker";
 import StopDetail from "../stops/StopDetail";
 import type { NearbyStop } from "../api/client";
 

@@ -1,6 +1,6 @@
-import type { ComponentType, ReactNode } from "react";
+import type { ComponentType } from "react";
 import type { RouteObject } from "react-router";
-import type { LatLng, LatLngBounds, Icon } from "leaflet";
+import type { LatLng, Icon } from "leaflet";
 
 export interface ModuleDefinition {
   id: string;
@@ -17,9 +17,7 @@ export interface MapLayerProvider {
   name: string; // i18n key for toggle label
   icon: ComponentType;
   defaultVisible: boolean;
-  getMarkers(bounds: LatLngBounds): Promise<MapMarker[]>;
-  getPopupContent(marker: MapMarker): ReactNode;
-  refreshInterval?: number; // ms, for real-time layers
+  MapComponent: ComponentType; // renders inside shared MapContainer
 }
 
 export interface MapMarker {
