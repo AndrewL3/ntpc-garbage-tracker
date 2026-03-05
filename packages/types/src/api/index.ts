@@ -12,3 +12,15 @@ export {
   type RouteStopRaw,
   type RouteStop,
 } from "./route-stop.js";
+
+export {
+  NtcYouBikeRawSchema,
+  NtcYouBikeRawArraySchema,
+  TpeYouBikeRawSchema,
+  TpeYouBikeRawArraySchema,
+  transformNtcStation,
+  transformTpeStation,
+  type NtcYouBikeRaw,
+  type TpeYouBikeRaw,
+  type YouBikeStation,
+} from "./youbike.js";
