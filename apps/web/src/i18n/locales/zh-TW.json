@@ -2,6 +2,7 @@
   "nav": {
     "map": "地圖",
     "routes": "路線",
+    "youbike": "YouBike",
     "toggleTheme": "切換主題",
     "toggleLang": "切換語言"
   },
@@ -14,7 +15,8 @@
     "zoomOut": "縮小",
     "recenter": "移到我的位置",
     "layers": {
-      "garbage": "垃圾車"
+      "garbage": "垃圾車",
+      "youbike": "YouBike 站點"
     }
   },
   "stop": {
@@ -46,6 +48,11 @@
     "noMatch": "找不到符合的路線",
     "noRoutes": "目前無路線資料",
     "failedToLoad": "無法載入路線"
+  },
+  "youbike": {
+    "availableBikes": "可借車輛",
+    "emptyDocks": "可還空位",
+    "lastUpdated": "更新時間"
   },
   "unit": {
     "min": "分鐘"

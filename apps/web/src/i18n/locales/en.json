@@ -2,6 +2,7 @@
   "nav": {
     "map": "Map",
     "routes": "Routes",
+    "youbike": "YouBike",
     "toggleTheme": "Toggle theme",
     "toggleLang": "Toggle language"
   },
@@ -14,7 +15,8 @@
     "zoomOut": "Zoom out",
     "recenter": "Recenter on my location",
     "layers": {
-      "garbage": "Garbage trucks"
+      "garbage": "Garbage trucks",
+      "youbike": "YouBike stations"
     }
   },
   "stop": {
@@ -46,6 +48,11 @@
     "noMatch": "No routes match your search",
     "noRoutes": "No routes available",
     "failedToLoad": "Failed to load routes"
+  },
+  "youbike": {
+    "availableBikes": "Available bikes",
+    "emptyDocks": "Empty docks",
+    "lastUpdated": "Updated"
   },
   "unit": {
     "min": "min"
