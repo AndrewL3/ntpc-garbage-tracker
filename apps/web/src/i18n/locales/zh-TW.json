@@ -9,6 +9,7 @@
   },
   "error": {
     "somethingWentWrong": "發生錯誤",
+    "generic": "發生錯誤",
     "retry": "重試"
   },
   "map": {
@@ -38,6 +39,7 @@
     "foodScraps": "廚餘"
   },
   "route": {
+    "back": "返回",
     "failedToLoad": "無法載入路線",
     "goBack": "返回",
     "notFound": "找不到路線",
@@ -66,7 +68,10 @@
     "notDeparted": "尚未發車",
     "lastBusLeft": "末班已過",
     "notOperating": "未營運",
-    "min": "分"
+    "min": "分",
+    "outbound": "去程",
+    "return": "返程",
+    "viewRoute": "查看路線"
   },
   "pwa": {
     "installPrompt": "加入主畫面",

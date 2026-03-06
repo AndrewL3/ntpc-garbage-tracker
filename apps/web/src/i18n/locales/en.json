@@ -9,6 +9,7 @@
   },
   "error": {
     "somethingWentWrong": "Something went wrong",
+    "generic": "Something went wrong",
     "retry": "Retry"
   },
   "map": {
@@ -38,6 +39,7 @@
     "foodScraps": "Food Scraps"
   },
   "route": {
+    "back": "Go back",
     "failedToLoad": "Failed to load route",
     "goBack": "Go back",
     "notFound": "Route not found",
@@ -66,7 +68,10 @@
     "notDeparted": "Not departed",
     "lastBusLeft": "Last bus left",
     "notOperating": "Not operating",
-    "min": "min"
+    "min": "min",
+    "outbound": "Outbound",
+    "return": "Return",
+    "viewRoute": "View route"
   },
   "pwa": {
     "installPrompt": "Add to Home Screen",

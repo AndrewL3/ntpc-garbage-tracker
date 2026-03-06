@@ -10,6 +10,9 @@ import SharedMapView from "../map/SharedMapView";
 const RouteProgressView = lazy(
   () => import("@/modules/garbage/stops/RouteProgressView"),
 );
+const TransitRouteView = lazy(
+  () => import("@/modules/transit/routes/RouteView"),
+);
 const AdminView = lazy(() => import("@/features/admin/AdminView"));
 
 function PageSkeleton() {
@@ -43,6 +46,10 @@ export default function AppShell() {
             )}
           </Route>
           <Route path="route/:lineId" element={<RouteProgressView />} />
+          <Route
+            path="transit/route/:routeId"
+            element={<TransitRouteView />}
+          />
           <Route path="admin" element={<AdminView />} />
         </Routes>
       </Suspense>

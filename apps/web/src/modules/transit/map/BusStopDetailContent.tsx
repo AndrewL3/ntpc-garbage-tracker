@@ -1,24 +1,9 @@
 import { useTranslation } from "react-i18next";
-import type { TFunction } from "i18next";
+import { useNavigate } from "react-router";
 import { Bus, MapPin } from "lucide-react";
 import { useStationArrivals } from "../api/hooks";
+import { formatEta, etaColor } from "../utils/format";
 import type { BusStation } from "../api/types";
-
-function formatEta(minutes: number | null, stopStatus: number, t: TFunction): string {
-  if (stopStatus === 4) return t("transit.notOperating");
-  if (stopStatus === 1) return t("transit.notDeparted");
-  if (stopStatus === 3) return t("transit.lastBusLeft");
-  if (minutes == null) return "--";
-  if (minutes <= 0) return t("transit.arriving");
-  return `${minutes} ${t("transit.min")}`;
-}
-
-function etaColor(minutes: number | null, stopStatus: number): string {
-  if (stopStatus !== 0 || minutes == null) return "text-muted-foreground";
-  if (minutes <= 1) return "text-red-500";
-  if (minutes <= 5) return "text-amber-500";
-  return "text-foreground";
-}
 
 interface BusStopDetailContentProps {
   station: BusStation;
@@ -28,6 +13,7 @@ export default function BusStopDetailContent({
   station,
 }: BusStopDetailContentProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: arrivals, isLoading } = useStationArrivals(
     station.stationId,
     station.city,
@@ -67,9 +53,16 @@ export default function BusStopDetailContent({
                 className="flex items-center justify-between py-2"
               >
                 <div className="flex items-center gap-2">
-                  <span className="rounded bg-blue-500/10 px-2 py-0.5 text-sm font-bold text-blue-600 dark:text-blue-400">
+                  <button
+                    onClick={() =>
+                      navigate(
+                        `/transit/route/${a.routeId}?city=${station.city}&dir=${a.direction}`,
+                      )
+                    }
+                    className="rounded bg-blue-500/10 px-2 py-0.5 text-sm font-bold text-blue-600 hover:bg-blue-500/20 dark:text-blue-400"
+                  >
                     {a.routeName}
-                  </span>
+                  </button>
                   {a.destination && (
                     <span className="text-xs text-muted-foreground">
                       → {a.destination}
