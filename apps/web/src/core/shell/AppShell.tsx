@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getRegisteredModules } from "../module-registry";
 import ShellLayout from "./ShellLayout";
 import ReloadPrompt from "@/components/ReloadPrompt";
+import InstallPrompt from "@/components/InstallPrompt";
 import SharedMapView from "../map/SharedMapView";
 
 const RouteProgressView = lazy(
@@ -46,6 +47,7 @@ export default function AppShell() {
         </Routes>
       </Suspense>
       <ReloadPrompt />
+      <InstallPrompt />
     </>
   );
 }

@@ -56,6 +56,11 @@
     "emptyDocks": "Empty docks",
     "lastUpdated": "Updated"
   },
+  "pwa": {
+    "installPrompt": "Add to Home Screen",
+    "install": "Install",
+    "dismiss": "Dismiss"
+  },
   "unit": {
     "min": "min"
   }

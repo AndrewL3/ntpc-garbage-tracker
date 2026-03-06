@@ -56,6 +56,11 @@
     "emptyDocks": "可還空位",
     "lastUpdated": "更新時間"
   },
+  "pwa": {
+    "installPrompt": "加入主畫面",
+    "install": "安裝",
+    "dismiss": "略過"
+  },
   "unit": {
     "min": "分鐘"
   }
