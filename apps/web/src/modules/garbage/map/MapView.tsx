@@ -1,19 +1,36 @@
-import { useState, useCallback, useRef, useMemo } from "react";
+import { useState, useCallback, useRef, useMemo, useEffect } from "react";
 import { useMap, useMapEvents } from "react-leaflet";
+import type L from "leaflet";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useNearbyStops, useRouteDetail } from "../api/hooks";
+import { useNearbyStops, useRouteDetail, useTaipeiStops } from "../api/hooks";
+import type { TaipeiGarbageStop, MapBounds } from "../api/taipei-client";
 import StopMarker from "./StopMarker";
 import StopPopup from "./StopPopup";
 import RoutePolyline from "./RoutePolyline";
 import TruckMarker from "./TruckMarker";
+import TaipeiStopMarker from "./TaipeiStopMarker";
+import TaipeiStopPopup from "./TaipeiStopPopup";
 import StopDetail from "../stops/StopDetail";
+import TaipeiStopDetail from "../stops/TaipeiStopDetail";
 import type { NearbyStop } from "../api/client";
+
+function getBounds(map: L.Map): MapBounds {
+  const b = map.getBounds();
+  return {
+    north: b.getNorth(),
+    south: b.getSouth(),
+    east: b.getEast(),
+    west: b.getWest(),
+  };
+}
 
 function GarbageMapEvents({
   onMoveEnd,
+  onBoundsChange,
   onDeselect,
 }: {
   onMoveEnd: (lat: number, lon: number) => void;
+  onBoundsChange: (bounds: MapBounds) => void;
   onDeselect: () => void;
 }) {
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -24,6 +41,7 @@ function GarbageMapEvents({
       timerRef.current = setTimeout(() => {
         const center = e.target.getCenter();
         onMoveEnd(center.lat, center.lng);
+        onBoundsChange(getBounds(e.target));
       }, 500);
     },
     click() {
@@ -43,16 +61,51 @@ export default function GarbageMapLayer() {
   const [selectedStop, setSelectedStop] = useState<NearbyStop | null>(null);
   const selectingRef = useRef(false);
 
+  // Bounds for Taipei bounding-box query
+  const [bounds, setBounds] = useState<MapBounds | null>(null);
+
+  // Taipei stop selection (separate from NTC selection)
+  const [selectedTaipeiStop, setSelectedTaipeiStop] =
+    useState<TaipeiGarbageStop | null>(null);
+  const selectingTaipeiRef = useRef(false);
+
+  // Initialize bounds on mount
+  useEffect(() => {
+    setBounds(getBounds(map));
+  }, [map]);
+
+  // Fetch Taipei stops
+  const { data: taipeiStops } = useTaipeiStops(bounds);
+
   const handleMoveEnd = useCallback((lat: number, lon: number) => {
     setMapCenter({ lat, lon });
+  }, []);
+
+  const handleBoundsChange = useCallback((newBounds: MapBounds) => {
+    setBounds(newBounds);
   }, []);
 
   const handleSelect = useCallback((stop: NearbyStop) => {
     selectingRef.current = true;
     setSelectedStop(stop);
+    setSelectedTaipeiStop(null); // clear Taipei selection
     requestAnimationFrame(() => {
       selectingRef.current = false;
     });
+  }, []);
+
+  const handleSelectTaipei = useCallback((stop: TaipeiGarbageStop) => {
+    selectingTaipeiRef.current = true;
+    setSelectedTaipeiStop(stop);
+    setSelectedStop(null); // clear NTC selection
+    requestAnimationFrame(() => {
+      selectingTaipeiRef.current = false;
+    });
+  }, []);
+
+  const handleDeselectTaipei = useCallback(() => {
+    if (selectingTaipeiRef.current) return;
+    setSelectedTaipeiStop(null);
   }, []);
 
   // Use map center for initial fetch, then track panning
@@ -65,8 +118,9 @@ export default function GarbageMapLayer() {
   const { data: routeDetail } = useRouteDetail(selectedStop?.routeLineId);
 
   const handleDeselect = useCallback(() => {
-    if (selectingRef.current) return;
+    if (selectingRef.current || selectingTaipeiRef.current) return;
     setSelectedStop(null);
+    setSelectedTaipeiStop(null);
   }, []);
 
   const stopStatusMap = useMemo(() => {
@@ -98,7 +152,7 @@ export default function GarbageMapLayer() {
 
   return (
     <>
-      <GarbageMapEvents onMoveEnd={handleMoveEnd} onDeselect={handleDeselect} />
+      <GarbageMapEvents onMoveEnd={handleMoveEnd} onBoundsChange={handleBoundsChange} onDeselect={handleDeselect} />
 
       {routeDetail?.route.geometry && selectedStop && (
         <RoutePolyline
@@ -118,8 +172,9 @@ export default function GarbageMapLayer() {
         const status = stopStatusMap.get(key);
         const selectedRouteLineId = selectedStop?.routeLineId ?? null;
         const faded =
-          selectedStop !== null &&
-          stop.routeLineId !== selectedStop.routeLineId;
+          selectedTaipeiStop !== null ||
+          (selectedStop !== null &&
+            stop.routeLineId !== selectedStop.routeLineId);
         return (
           <StopMarker
             key={key}
@@ -136,12 +191,30 @@ export default function GarbageMapLayer() {
         );
       })}
 
+      {taipeiStops?.map((stop) => (
+        <TaipeiStopMarker
+          key={stop.id}
+          stop={stop}
+          selected={selectedTaipeiStop?.id === stop.id}
+          onSelect={handleSelectTaipei}
+          faded={selectedStop !== null}
+        />
+      ))}
+
       {isDesktop && selectedStop && (
         <StopPopup stop={selectedStop} onClose={handleDeselect} />
       )}
 
       {!isDesktop && (
         <StopDetail stop={selectedStop} onClose={handleDeselect} />
+      )}
+
+      {isDesktop && selectedTaipeiStop && (
+        <TaipeiStopPopup stop={selectedTaipeiStop} onClose={handleDeselectTaipei} />
+      )}
+
+      {!isDesktop && (
+        <TaipeiStopDetail stop={selectedTaipeiStop} onClose={handleDeselectTaipei} />
       )}
     </>
   );
