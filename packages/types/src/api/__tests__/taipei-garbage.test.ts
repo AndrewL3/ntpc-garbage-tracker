@@ -2,7 +2,6 @@ import { describe, it, expect } from "@jest/globals";
 import {
   TaipeiGarbageCsvRowSchema,
   parseTaipeiGarbageCsv,
-  type TaipeiGarbageStop,
 } from "../taipei-garbage.js";
 
 describe("TaipeiGarbageCsvRowSchema", () => {

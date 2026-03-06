@@ -36,7 +36,7 @@ describe("NtcYouBikeRawSchema", () => {
   });
 
   it("rejects record with missing sno", () => {
-    const { sno, ...incomplete } = raw;
+    const { sno: _sno, ...incomplete } = raw;
     expect(() => NtcYouBikeRawSchema.parse(incomplete)).toThrow();
   });
 });

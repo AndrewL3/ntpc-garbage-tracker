@@ -110,7 +110,7 @@ export default async function handler(
       }
     }
 
-    let redisState: Record<string, number> = {};
+    const redisState: Record<string, number> = {};
     if (allKeys.length > 0) {
       try {
         const values = await redis.mget<(number | null)[]>(...allKeys);

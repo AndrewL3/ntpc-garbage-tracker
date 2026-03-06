@@ -48,7 +48,7 @@ async function handleList(res: VercelResponse) {
     ORDER BY r.line_name
   `);
 
-  const routeList = (rows as any[]).map((row: any) => ({
+  const routeList = (rows as Record<string, unknown>[]).map((row) => ({
     lineId: row.line_id,
     lineName: row.line_name,
     city: row.city,
