@@ -77,7 +77,20 @@
   "dashboard": {
     "title": "Dashboard",
     "enableLocation": "Enable location for personalized info",
-    "noCards": "No dashboard cards available"
+    "noCards": "No dashboard cards available",
+    "viewOnMap": "View on map",
+    "garbage": {
+      "title": "Garbage Truck",
+      "noStops": "No nearby garbage stops"
+    },
+    "youbike": {
+      "title": "YouBike",
+      "noStations": "No nearby stations"
+    },
+    "transit": {
+      "title": "Bus Transit",
+      "noStops": "No nearby bus stops"
+    }
   },
   "pwa": {
     "installPrompt": "Add to Home Screen",

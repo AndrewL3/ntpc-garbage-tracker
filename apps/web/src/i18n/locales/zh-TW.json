@@ -77,7 +77,20 @@
   "dashboard": {
     "title": "首頁",
     "enableLocation": "啟用定位以獲取個人化資訊",
-    "noCards": "目前無可用的資訊卡"
+    "noCards": "目前無可用的資訊卡",
+    "viewOnMap": "在地圖上查看",
+    "garbage": {
+      "title": "垃圾車",
+      "noStops": "附近無垃圾收集點"
+    },
+    "youbike": {
+      "title": "YouBike",
+      "noStations": "附近無站點"
+    },
+    "transit": {
+      "title": "公車",
+      "noStops": "附近無公車站"
+    }
   },
   "pwa": {
     "installPrompt": "加入主畫面",

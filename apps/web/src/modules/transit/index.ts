@@ -1,6 +1,7 @@
 import { Bus } from "lucide-react";
 import type { ModuleDefinition } from "@/core/types";
 import TransitMapLayer from "./map/TransitMapLayer";
+import TransitDashboardCard from "./dashboard/TransitDashboardCard";
 
 export const transitModule: ModuleDefinition = {
   id: "transit",
@@ -16,4 +17,5 @@ export const transitModule: ModuleDefinition = {
       MapComponent: TransitMapLayer,
     },
   ],
+  dashboardCard: TransitDashboardCard,
 };

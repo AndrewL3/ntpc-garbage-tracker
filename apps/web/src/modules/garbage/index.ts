@@ -2,6 +2,7 @@ import { lazy, createElement } from "react";
 import { Trash2 } from "lucide-react";
 import type { ModuleDefinition } from "@/core/types";
 import GarbageMapLayer from "./map/MapView";
+import GarbageDashboardCard from "./dashboard/GarbageDashboardCard";
 
 const SchedulesView = lazy(() => import("./schedules/SchedulesView"));
 
@@ -21,4 +22,5 @@ export const garbageModule: ModuleDefinition = {
       MapComponent: GarbageMapLayer,
     },
   ],
+  dashboardCard: GarbageDashboardCard,
 };
