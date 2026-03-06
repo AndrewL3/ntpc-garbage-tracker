@@ -24,3 +24,10 @@ export {
   type TpeYouBikeRaw,
   type YouBikeStation,
 } from "./youbike.js";
+
+export {
+  TaipeiGarbageCsvRowSchema,
+  parseTaipeiGarbageCsv,
+  type TaipeiGarbageCsvRow,
+  type TaipeiGarbageStop,
+} from "./taipei-garbage.js";
