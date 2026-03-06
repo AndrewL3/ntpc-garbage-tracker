@@ -4,6 +4,7 @@ import { tdxFetch } from "../../src/data-sources/tdx.js";
 import {
   TdxBusStopRawArraySchema,
   groupStopsIntoStations,
+  type CityKey,
   type BusStation,
   type TdxBusStopRaw,
 } from "@tracker/types";
@@ -11,7 +12,9 @@ import {
 const CACHE_KEY = "transit:stations";
 const CACHE_TTL = 86400; // 24h
 
-const CITIES = [
+const VALID_CITIES: Set<string> = new Set(["Taipei", "NewTaipei"]);
+
+const CITIES: { path: CityKey; code: string }[] = [
   { path: "Taipei", code: "TPE" },
   { path: "NewTaipei", code: "NWT" },
 ];
@@ -41,10 +44,7 @@ async function getAllStations(): Promise<BusStation[]> {
   return all;
 }
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse,
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   try {
@@ -60,10 +60,14 @@ export default async function handler(
       });
     }
 
+    const cityParam = req.query.city as string | undefined;
+    if (cityParam && !VALID_CITIES.has(cityParam)) {
+      return res.status(400).json({ ok: false, error: "Invalid city" });
+    }
+
     const all = await getAllStations();
     const stations = all.filter(
-      (s) =>
-        s.lat >= south && s.lat <= north && s.lon >= west && s.lon <= east,
+      (s) => s.lat >= south && s.lat <= north && s.lon >= west && s.lon <= east,
     );
 
     return res.status(200).json({ ok: true, stations });

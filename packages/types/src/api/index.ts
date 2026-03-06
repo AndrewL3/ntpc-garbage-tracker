@@ -43,6 +43,7 @@ export {
   TdxBusRouteRawArraySchema,
   groupStopsIntoStations,
   transformArrivals,
+  type CityKey,
   type TdxBusStopRaw,
   type TdxBusEtaRaw,
   type TdxBusPositionRaw,

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type CityKey = "Taipei" | "NewTaipei";
+
 // Shared TDX name object (zh_tw + en)
 const TdxNameSchema = z.object({
   Zh_tw: z.string(),
@@ -145,12 +147,17 @@ export function groupStopsIntoStations(
       nameEn: string;
       lat: number;
       lon: number;
-      routes: Map<string, { routeId: string; routeName: string; routeNameEn: string }>;
+      routes: Map<
+        string,
+        { routeId: string; routeName: string; routeNameEn: string }
+      >;
     }
   >();
 
   for (const stop of stops) {
-    const key = stop.StationID ?? `${stop.StopName.Zh_tw}_${stop.StopPosition.PositionLat.toFixed(4)}_${stop.StopPosition.PositionLon.toFixed(4)}`;
+    const key =
+      stop.StationID ??
+      `${stop.StopName.Zh_tw}_${stop.StopPosition.PositionLat.toFixed(4)}_${stop.StopPosition.PositionLon.toFixed(4)}`;
 
     let station = stationMap.get(key);
     if (!station) {
