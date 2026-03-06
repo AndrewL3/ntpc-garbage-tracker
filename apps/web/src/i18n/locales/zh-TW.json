@@ -26,7 +26,9 @@
     "showFullRoute": "查看完整路線",
     "scheduledTime": "預定時間",
     "unableToLoad": "無法載入時刻表",
-    "notAvailable": "無法取得站點資訊"
+    "notAvailable": "無法取得站點資訊",
+    "scheduleOnly": "僅顯示時刻表",
+    "arrivalDeparture": "抵達 - 離開"
   },
   "collection": {
     "garbage": "垃圾",

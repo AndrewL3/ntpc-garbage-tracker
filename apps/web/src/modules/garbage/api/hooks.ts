@@ -4,6 +4,7 @@ import {
   fetchRouteList,
   fetchRouteDetail,
 } from "./client";
+import { fetchTaipeiStops, type MapBounds } from "./taipei-client";
 
 /** Round to 4 decimals (~11m) to prevent cache key explosion on map pan */
 function snap(n: number): number {
@@ -43,5 +44,29 @@ export function useRouteList() {
     queryKey: ["routes"],
     queryFn: fetchRouteList,
     staleTime: 60_000,
+  });
+}
+
+/** Round to 3 decimals (~111m) to prevent cache key explosion on map pan */
+function snapBounds(n: number): number {
+  return Math.round(n * 1_000) / 1_000;
+}
+
+export function useTaipeiStops(bounds: MapBounds | null) {
+  const snapped = bounds
+    ? {
+        north: snapBounds(bounds.north),
+        south: snapBounds(bounds.south),
+        east: snapBounds(bounds.east),
+        west: snapBounds(bounds.west),
+      }
+    : null;
+
+  return useQuery({
+    queryKey: ["taipei-garbage-stops", snapped],
+    queryFn: () => fetchTaipeiStops(snapped!),
+    enabled: snapped !== null,
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
   });
 }
