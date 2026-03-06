@@ -31,3 +31,25 @@ export {
   type TaipeiGarbageCsvRow,
   type TaipeiGarbageStop,
 } from "./taipei-garbage.js";
+
+export {
+  TdxBusStopRawSchema,
+  TdxBusStopRawArraySchema,
+  TdxBusEtaRawSchema,
+  TdxBusEtaRawArraySchema,
+  TdxBusPositionRawSchema,
+  TdxBusPositionRawArraySchema,
+  TdxBusRouteRawSchema,
+  TdxBusRouteRawArraySchema,
+  groupStopsIntoStations,
+  transformArrivals,
+  type TdxBusStopRaw,
+  type TdxBusEtaRaw,
+  type TdxBusPositionRaw,
+  type TdxBusRouteRaw,
+  type BusStation,
+  type BusArrival,
+  type BusRouteDetail,
+  type BusRouteStop,
+  type BusVehicle,
+} from "./tdx-bus.js";
