@@ -97,6 +97,15 @@
     "install": "安裝",
     "dismiss": "略過"
   },
+  "search": {
+    "placeholder": "搜尋站點、路線...",
+    "noResults": "找不到結果",
+    "module": {
+      "garbage": "垃圾車",
+      "youbike": "YouBike",
+      "transit": "公車"
+    }
+  },
   "unit": {
     "min": "分鐘"
   }

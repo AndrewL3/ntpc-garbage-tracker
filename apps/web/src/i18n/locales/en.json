@@ -97,6 +97,15 @@
     "install": "Install",
     "dismiss": "Dismiss"
   },
+  "search": {
+    "placeholder": "Search stops, routes, stations...",
+    "noResults": "No results found",
+    "module": {
+      "garbage": "Garbage",
+      "youbike": "YouBike",
+      "transit": "Bus Transit"
+    }
+  },
   "unit": {
     "min": "min"
   }

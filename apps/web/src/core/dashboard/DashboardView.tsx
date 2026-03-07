@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { MapPin } from "lucide-react";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { getRegisteredModules } from "../module-registry";
+import SearchBar from "../search/SearchBar";
 
 export default function DashboardView() {
   const { t } = useTranslation();
@@ -20,6 +21,8 @@ export default function DashboardView() {
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-lg space-y-4 px-4 py-6">
           <h1 className="text-2xl font-bold">{t("dashboard.title")}</h1>
+
+          <SearchBar />
 
           {!located && (
             <div className="rounded-xl border border-border/12 bg-card p-4 shadow-sm">
