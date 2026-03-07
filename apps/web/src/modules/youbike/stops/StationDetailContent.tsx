@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Bike, ParkingSquare, MapPin, Clock } from "lucide-react";
-import { getAvailabilityColor } from "../map/StationMarker";
+import { getAvailabilityColor } from "../utils/availability";
 import type { YouBikeStation } from "../api/client";
 
 interface StationDetailContentProps {

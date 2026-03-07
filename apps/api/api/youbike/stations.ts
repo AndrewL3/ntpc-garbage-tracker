@@ -54,10 +54,7 @@ async function getAllStations(): Promise<YouBikeStation[]> {
   return all;
 }
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse,
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   try {
@@ -75,8 +72,7 @@ export default async function handler(
 
     const all = await getAllStations();
     const stations = all.filter(
-      (s) =>
-        s.lat >= south && s.lat <= north && s.lon >= west && s.lon <= east,
+      (s) => s.lat >= south && s.lat <= north && s.lon >= west && s.lon <= east,
     );
 
     return res.status(200).json({ ok: true, stations });

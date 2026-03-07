@@ -16,7 +16,10 @@ export default function RouteProgressView() {
   const { data, isLoading, isError, refetch } = useRouteDetail(lineId);
   const truckRef = useRef<HTMLDivElement>(null);
 
-  const COLLECTION_ICONS: Record<string, { icon: typeof Trash2; title: string }> = {
+  const COLLECTION_ICONS: Record<
+    string,
+    { icon: typeof Trash2; title: string }
+  > = {
     garbage: { icon: Trash2, title: t("collection.garbage") },
     recycling: { icon: Recycle, title: t("collection.recycling") },
     foodScraps: { icon: Apple, title: t("collection.foodScraps") },
@@ -138,7 +141,9 @@ export default function RouteProgressView() {
             return (
               <div key={stop.rank}>
                 {/* Stop node */}
-                <div className={`flex items-start gap-3 ${passed && !isActive ? "opacity-50" : ""}`}>
+                <div
+                  className={`flex items-start gap-3 ${passed && !isActive ? "opacity-50" : ""}`}
+                >
                   {/* Timeline dot + line */}
                   <div className="flex w-6 flex-col items-center">
                     {/* Dot */}
@@ -171,7 +176,9 @@ export default function RouteProgressView() {
                   {/* Stop info */}
                   <div className="min-w-0 flex-1 pb-5">
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className={`truncate ${isActive ? "text-base font-bold" : "font-medium"}`}>
+                      <span
+                        className={`truncate ${isActive ? "text-base font-bold" : "font-medium"}`}
+                      >
                         {stop.name}
                       </span>
                       <span

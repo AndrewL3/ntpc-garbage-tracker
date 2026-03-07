@@ -3,7 +3,7 @@ import { Bike } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useYouBikeStations } from "../api/hooks";
-import { getAvailabilityColor } from "../map/StationMarker";
+import { getAvailabilityColor } from "../utils/availability";
 
 export default function YouBikeDashboardCard() {
   const { t } = useTranslation();
@@ -40,9 +40,7 @@ export default function YouBikeDashboardCard() {
         </button>
       </div>
 
-      {isLoading && (
-        <div className="h-12 animate-pulse rounded-lg bg-muted" />
-      )}
+      {isLoading && <div className="h-12 animate-pulse rounded-lg bg-muted" />}
 
       {!isLoading && nearest && (
         <div className="flex items-center gap-3">

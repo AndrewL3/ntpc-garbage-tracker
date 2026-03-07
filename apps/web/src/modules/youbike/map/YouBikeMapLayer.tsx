@@ -42,8 +42,9 @@ export default function YouBikeMapLayer() {
   const map = useMap();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [bounds, setBounds] = useState<MapBounds | null>(null);
-  const [selectedStation, setSelectedStation] =
-    useState<YouBikeStation | null>(null);
+  const [selectedStation, setSelectedStation] = useState<YouBikeStation | null>(
+    null,
+  );
   const selectingRef = useRef(false);
 
   // Initialize bounds on mount

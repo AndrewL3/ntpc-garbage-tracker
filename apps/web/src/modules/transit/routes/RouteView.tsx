@@ -6,16 +6,11 @@ import { useRouteDetail } from "../api/route-hooks";
 import { formatEta } from "../utils/format";
 import type { BusRouteStop } from "../api/route-types";
 
-function stopStatusColor(
-  minutes: number | null,
-  stopStatus: number,
-): string {
+function stopStatusColor(minutes: number | null, stopStatus: number): string {
   if (stopStatus !== 0 || minutes == null)
     return "bg-muted text-muted-foreground";
-  if (minutes <= 1)
-    return "bg-red-500/10 text-red-600 dark:text-red-400";
-  if (minutes <= 5)
-    return "bg-amber-500/10 text-amber-600 dark:text-amber-400";
+  if (minutes <= 1) return "bg-red-500/10 text-red-600 dark:text-red-400";
+  if (minutes <= 5) return "bg-amber-500/10 text-amber-600 dark:text-amber-400";
   return "bg-blue-500/10 text-blue-600 dark:text-blue-400";
 }
 
@@ -107,10 +102,7 @@ export default function RouteView() {
         {isLoading && (
           <div className="space-y-1 p-4">
             {Array.from({ length: 8 }, (_, i) => (
-              <div
-                key={i}
-                className="h-12 animate-pulse rounded-lg bg-muted"
-              />
+              <div key={i} className="h-12 animate-pulse rounded-lg bg-muted" />
             ))}
           </div>
         )}

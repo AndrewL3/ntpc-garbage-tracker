@@ -8,7 +8,11 @@ export default function GarbageDashboardCard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { position, located } = useGeolocation();
-  const { data: stops, isLoading, isError } = useNearbyStops(
+  const {
+    data: stops,
+    isLoading,
+    isError,
+  } = useNearbyStops(
     located ? position.lat : null,
     located ? position.lon : null,
     500,
@@ -33,9 +37,7 @@ export default function GarbageDashboardCard() {
         </button>
       </div>
 
-      {isLoading && (
-        <div className="h-12 animate-pulse rounded-lg bg-muted" />
-      )}
+      {isLoading && <div className="h-12 animate-pulse rounded-lg bg-muted" />}
 
       {!isLoading && nearest && (
         <div className="flex items-center gap-3">

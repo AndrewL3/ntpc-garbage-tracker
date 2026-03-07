@@ -81,9 +81,7 @@ async function main() {
       );
     } else {
       failed++;
-      console.log(
-        `[${i + 1}/${routeRows.length}] ${route.lineName} — FAILED`,
-      );
+      console.log(`[${i + 1}/${routeRows.length}] ${route.lineName} — FAILED`);
     }
 
     // Rate limit between requests

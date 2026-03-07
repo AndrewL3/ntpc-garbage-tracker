@@ -41,7 +41,9 @@ export default function TaipeiStopDetailContent({
         <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
         <div>
           <p>{stop.address}</p>
-          <p>{stop.district} · {stop.village}</p>
+          <p>
+            {stop.district} · {stop.village}
+          </p>
         </div>
       </div>
     </div>

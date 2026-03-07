@@ -133,10 +133,15 @@ function DataFreshnessPanel({
 }: {
   freshness: AdminStatus["freshness"];
 }) {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
   const gpsAge = freshness.latestGpsTimestamp
     ? Math.round(
-        (Date.now() - new Date(freshness.latestGpsTimestamp).getTime()) /
-          60_000,
+        (now - new Date(freshness.latestGpsTimestamp).getTime()) / 60_000,
       )
     : null;
 
@@ -308,12 +313,10 @@ export default function AdminView() {
   const isUnauthorized =
     isError && error instanceof Error && error.message === "Unauthorized";
 
-  useEffect(() => {
-    if (isUnauthorized && token) {
-      sessionStorage.removeItem("admin_token");
-      setToken(null);
-    }
-  }, [isUnauthorized, token]);
+  if (isUnauthorized && token) {
+    sessionStorage.removeItem("admin_token");
+    setToken(null);
+  }
 
   const handleAuth = useCallback((pw: string) => {
     sessionStorage.setItem("admin_token", pw);

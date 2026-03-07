@@ -21,15 +21,19 @@ export function useGeolocation() {
     };
 
     // Try high accuracy first (GPS on mobile), fall back to low accuracy (IP/WiFi on desktop)
-    navigator.geolocation.getCurrentPosition(onSuccess, () => {
-      navigator.geolocation.getCurrentPosition(
-        onSuccess,
-        () => {
-          // Both attempts failed — keep default position
-        },
-        { enableHighAccuracy: false, timeout: 15_000 },
-      );
-    }, { enableHighAccuracy: true, timeout: 10_000 });
+    navigator.geolocation.getCurrentPosition(
+      onSuccess,
+      () => {
+        navigator.geolocation.getCurrentPosition(
+          onSuccess,
+          () => {
+            // Both attempts failed — keep default position
+          },
+          { enableHighAccuracy: false, timeout: 15_000 },
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10_000 },
+    );
   }, []);
 
   return { position, located };

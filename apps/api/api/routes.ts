@@ -115,7 +115,9 @@ async function handleDetail(lineId: string, res: VercelResponse) {
   const etaResult = computeEtaDelta(routeStops, events, today, dow);
 
   // 5. Merge coordinates back into annotated stops
-  const coordMap = new Map(stopRows.map((s) => [s.rank, { lat: s.latitude, lon: s.longitude }]));
+  const coordMap = new Map(
+    stopRows.map((s) => [s.rank, { lat: s.latitude, lon: s.longitude }]),
+  );
   const stopsWithCoords = etaResult.stops.map((s) => ({
     ...s,
     latitude: coordMap.get(s.rank)!.lat,

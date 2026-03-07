@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore -- pnpm may hoist duplicate vite types causing Plugin mismatch
     VitePWA({
       registerType: "prompt",

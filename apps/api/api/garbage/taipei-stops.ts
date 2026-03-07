@@ -1,9 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { redis } from "../../src/redis.js";
-import {
-  parseTaipeiGarbageCsv,
-  type TaipeiGarbageStop,
-} from "@tracker/types";
+import { parseTaipeiGarbageCsv, type TaipeiGarbageStop } from "@tracker/types";
 
 const CACHE_KEY = "garbage:taipei:stops";
 const CACHE_TTL = 86_400; // 24 hours
@@ -26,10 +23,7 @@ async function getAllStops(): Promise<TaipeiGarbageStop[]> {
   return stops;
 }
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse,
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   try {
@@ -47,8 +41,7 @@ export default async function handler(
 
     const all = await getAllStops();
     const stops = all.filter(
-      (s) =>
-        s.lat >= south && s.lat <= north && s.lon >= west && s.lon <= east,
+      (s) => s.lat >= south && s.lat <= north && s.lon >= west && s.lon <= east,
     );
 
     return res.status(200).json({ ok: true, stops });

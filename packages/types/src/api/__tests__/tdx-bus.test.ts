@@ -113,8 +113,16 @@ describe("TdxBusRouteRawSchema", () => {
 describe("groupStopsIntoStations", () => {
   it("groups stops from different routes at the same station", () => {
     const stops = [
-      { ...sampleStop, RouteUID: "TPE10307", RouteName: { Zh_tw: "307", En: "307" } },
-      { ...sampleStop, RouteUID: "TPE10604", RouteName: { Zh_tw: "604", En: "604" } },
+      {
+        ...sampleStop,
+        RouteUID: "TPE10307",
+        RouteName: { Zh_tw: "307", En: "307" },
+      },
+      {
+        ...sampleStop,
+        RouteUID: "TPE10604",
+        RouteName: { Zh_tw: "604", En: "604" },
+      },
     ];
     const stations = groupStopsIntoStations(stops, "TPE");
     expect(stations).toHaveLength(1);
@@ -125,7 +133,12 @@ describe("groupStopsIntoStations", () => {
   it("creates separate stations for different StationIDs", () => {
     const stops = [
       { ...sampleStop, StationID: "1000" },
-      { ...sampleStop, StationID: "2000", StopUID: "TPE15002", StopName: { Zh_tw: "台北車站", En: "Taipei Main Sta." } },
+      {
+        ...sampleStop,
+        StationID: "2000",
+        StopUID: "TPE15002",
+        StopName: { Zh_tw: "台北車站", En: "Taipei Main Sta." },
+      },
     ];
     const stations = groupStopsIntoStations(stops, "TPE");
     expect(stations).toHaveLength(2);
@@ -134,7 +147,12 @@ describe("groupStopsIntoStations", () => {
   it("falls back to name+coords when StationID is missing", () => {
     const stops = [
       { ...sampleStop, StationID: undefined, RouteUID: "TPE10307" },
-      { ...sampleStop, StationID: undefined, RouteUID: "TPE10604", RouteName: { Zh_tw: "604", En: "604" } },
+      {
+        ...sampleStop,
+        StationID: undefined,
+        RouteUID: "TPE10604",
+        RouteName: { Zh_tw: "604", En: "604" },
+      },
     ];
     const stations = groupStopsIntoStations(stops, "TPE");
     expect(stations).toHaveLength(1);
@@ -157,7 +175,12 @@ describe("transformArrivals", () => {
     const etas = [
       { ...sampleEta, StopUID: "TPE15001", RouteUID: "A", EstimateTime: 300 },
       { ...sampleEta, StopUID: "TPE15001", RouteUID: "B", EstimateTime: 60 },
-      { ...sampleEta, StopUID: "TPE15001", RouteUID: "C", EstimateTime: undefined },
+      {
+        ...sampleEta,
+        StopUID: "TPE15001",
+        RouteUID: "C",
+        EstimateTime: undefined,
+      },
     ];
     const result = transformArrivals(etas, new Set(["TPE15001"]));
     expect(result.map((r) => r.routeId)).toEqual(["B", "A", "C"]);

@@ -21,11 +21,5 @@ const truckIcon = L.divIcon({
 });
 
 export default function TruckMarker({ lat, lon }: TruckMarkerProps) {
-  return (
-    <Marker
-      position={[lat, lon]}
-      icon={truckIcon}
-      interactive={false}
-    />
-  );
+  return <Marker position={[lat, lon]} icon={truckIcon} interactive={false} />;
 }

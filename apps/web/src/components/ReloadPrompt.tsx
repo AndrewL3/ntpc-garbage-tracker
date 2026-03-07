@@ -18,9 +18,7 @@ export default function ReloadPrompt() {
     <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2">
       <div className="flex items-center gap-3 rounded-xl bg-card px-4 py-3 shadow-lg">
         <span className="text-sm text-foreground">
-          {offlineReady
-            ? "App ready to work offline"
-            : "New version available"}
+          {offlineReady ? "App ready to work offline" : "New version available"}
         </span>
         {needRefresh && (
           <button

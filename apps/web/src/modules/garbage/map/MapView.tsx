@@ -152,7 +152,11 @@ export default function GarbageMapLayer() {
 
   return (
     <>
-      <GarbageMapEvents onMoveEnd={handleMoveEnd} onBoundsChange={handleBoundsChange} onDeselect={handleDeselect} />
+      <GarbageMapEvents
+        onMoveEnd={handleMoveEnd}
+        onBoundsChange={handleBoundsChange}
+        onDeselect={handleDeselect}
+      />
 
       {routeDetail?.route.geometry && selectedStop && (
         <RoutePolyline
@@ -210,11 +214,17 @@ export default function GarbageMapLayer() {
       )}
 
       {isDesktop && selectedTaipeiStop && (
-        <TaipeiStopPopup stop={selectedTaipeiStop} onClose={handleDeselectTaipei} />
+        <TaipeiStopPopup
+          stop={selectedTaipeiStop}
+          onClose={handleDeselectTaipei}
+        />
       )}
 
       {!isDesktop && (
-        <TaipeiStopDetail stop={selectedTaipeiStop} onClose={handleDeselectTaipei} />
+        <TaipeiStopDetail
+          stop={selectedTaipeiStop}
+          onClose={handleDeselectTaipei}
+        />
       )}
     </>
   );

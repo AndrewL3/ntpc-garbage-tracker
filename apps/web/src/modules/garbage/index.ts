@@ -10,9 +10,7 @@ export const garbageModule: ModuleDefinition = {
   id: "garbage",
   name: "nav.schedules",
   icon: Trash2,
-  routes: [
-    { path: "schedules", element: createElement(SchedulesView) },
-  ],
+  routes: [{ path: "schedules", element: createElement(SchedulesView) }],
   mapLayers: [
     {
       id: "garbage",

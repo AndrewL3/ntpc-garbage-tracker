@@ -71,10 +71,7 @@ export default function SearchBar() {
       </div>
 
       {open && debouncedQuery.length >= 1 && (
-        <SearchOverlay
-          query={debouncedQuery}
-          onClose={() => setOpen(false)}
-        />
+        <SearchOverlay query={debouncedQuery} onClose={() => setOpen(false)} />
       )}
     </div>
   );

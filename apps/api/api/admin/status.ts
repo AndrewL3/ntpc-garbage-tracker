@@ -13,7 +13,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Auth: validate token against ADMIN_PASSWORD
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminPassword) {
-    return res.status(503).json({ ok: false, error: "ADMIN_PASSWORD not configured" });
+    return res
+      .status(503)
+      .json({ ok: false, error: "ADMIN_PASSWORD not configured" });
   }
   const token = req.query.token as string | undefined;
   if (token !== adminPassword) {
@@ -32,7 +34,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   ]);
 
   // --- Data Freshness ---
-  const freshness = { latestGpsTimestamp: ntcHealth.latestTimestamp, passEventsLastHour: 0, passEventsToday: 0 };
+  const freshness = {
+    latestGpsTimestamp: ntcHealth.latestTimestamp,
+    passEventsLastHour: 0,
+    passEventsToday: 0,
+  };
   try {
     const counts = await db.execute(sql`
       SELECT
@@ -52,7 +58,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const raw = await redis.lrange("admin:sync_log", 0, 19);
     recentSyncs = raw.map((entry) =>
-      typeof entry === "string" ? JSON.parse(entry) : entry
+      typeof entry === "string" ? JSON.parse(entry) : entry,
     );
   } catch (err) {
     console.error("[admin/status] sync log read failed:", err);
@@ -81,7 +87,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     routes = (rows as Record<string, unknown>[]).map((row) => {
       const activeVehicles = Number(row.active_vehicles ?? 0);
       const totalStops = Number(row.stop_count ?? 0);
-      const leadingStopRank = row.leading_stop_rank != null ? Number(row.leading_stop_rank) : null;
+      const leadingStopRank =
+        row.leading_stop_rank != null ? Number(row.leading_stop_rank) : null;
 
       const status =
         activeVehicles === 0
@@ -109,9 +116,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ok: true,
     timestamp: now.toISOString(),
     services: {
-      database: { ok: dbHealth.ok, latencyMs: dbHealth.latencyMs, error: dbHealth.error },
-      redis: { ok: redisHealth.ok, latencyMs: redisHealth.latencyMs, error: redisHealth.error },
-      ntcGpsApi: { ok: ntcHealth.ok, latencyMs: ntcHealth.latencyMs, vehicleCount: ntcHealth.vehicleCount, error: ntcHealth.error },
+      database: {
+        ok: dbHealth.ok,
+        latencyMs: dbHealth.latencyMs,
+        error: dbHealth.error,
+      },
+      redis: {
+        ok: redisHealth.ok,
+        latencyMs: redisHealth.latencyMs,
+        error: redisHealth.error,
+      },
+      ntcGpsApi: {
+        ok: ntcHealth.ok,
+        latencyMs: ntcHealth.latencyMs,
+        vehicleCount: ntcHealth.vehicleCount,
+        error: ntcHealth.error,
+      },
     },
     freshness,
     recentSyncs,
@@ -125,7 +145,11 @@ async function pingDatabase() {
     await db.execute(sql`SELECT 1`);
     return { ok: true, latencyMs: Date.now() - start };
   } catch (err) {
-    return { ok: false, latencyMs: Date.now() - start, error: err instanceof Error ? err.message : String(err) };
+    return {
+      ok: false,
+      latencyMs: Date.now() - start,
+      error: err instanceof Error ? err.message : String(err),
+    };
   }
 }
 
@@ -135,7 +159,11 @@ async function pingRedis() {
     await redis.ping();
     return { ok: true, latencyMs: Date.now() - start };
   } catch (err) {
-    return { ok: false, latencyMs: Date.now() - start, error: err instanceof Error ? err.message : String(err) };
+    return {
+      ok: false,
+      latencyMs: Date.now() - start,
+      error: err instanceof Error ? err.message : String(err),
+    };
   }
 }
 
@@ -149,7 +177,8 @@ async function pingNtcApi() {
       ok: true,
       latencyMs: Date.now() - start,
       vehicleCount: data.length,
-      latestTimestamp: data.length > 0 ? (data[0]?.time as string) ?? null : null,
+      latestTimestamp:
+        data.length > 0 ? ((data[0]?.time as string) ?? null) : null,
     };
   } catch (err) {
     return {

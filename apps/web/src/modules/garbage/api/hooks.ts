@@ -1,9 +1,5 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import {
-  fetchNearbyStops,
-  fetchRouteList,
-  fetchRouteDetail,
-} from "./client";
+import { fetchNearbyStops, fetchRouteList, fetchRouteDetail } from "./client";
 import { fetchTaipeiStops, type MapBounds } from "./taipei-client";
 
 /** Round to 4 decimals (~11m) to prevent cache key explosion on map pan */

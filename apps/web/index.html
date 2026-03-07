@@ -17,10 +17,28 @@
     <title>Taipei Daily</title>
     <!-- Critical CSS: prevent FOUC before Tailwind loads -->
     <style>
-      *, *::before, *::after { box-sizing: border-box; border-width: 0; border-style: solid; }
-      html, body, #root { height: 100%; margin: 0; }
-      body { background: oklch(0.985 0 0); -webkit-tap-highlight-color: transparent; }
-      @media (prefers-color-scheme: dark) { body { background: oklch(0.18 0.015 260); } }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        border-width: 0;
+        border-style: solid;
+      }
+      html,
+      body,
+      #root {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background: oklch(0.985 0 0);
+        -webkit-tap-highlight-color: transparent;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: oklch(0.18 0.015 260);
+        }
+      }
     </style>
   </head>
   <body>

@@ -99,14 +99,14 @@ async function searchYouBike(
     }));
 }
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse,
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   try {
-    const q = ((req.query.q as string) || "").trim().toLowerCase().slice(0, 100);
+    const q = ((req.query.q as string) || "")
+      .trim()
+      .toLowerCase()
+      .slice(0, 100);
     if (!q || q.length < 1) {
       return res.status(200).json({ ok: true, results: [] });
     }

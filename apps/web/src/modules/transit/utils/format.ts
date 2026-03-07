@@ -13,10 +13,7 @@ export function formatEta(
   return `${minutes} ${t("transit.min")}`;
 }
 
-export function etaColor(
-  minutes: number | null,
-  stopStatus: number,
-): string {
+export function etaColor(minutes: number | null, stopStatus: number): string {
   if (stopStatus !== 0 || minutes == null) return "text-muted-foreground";
   if (minutes <= 1) return "text-red-500";
   if (minutes <= 5) return "text-amber-500";

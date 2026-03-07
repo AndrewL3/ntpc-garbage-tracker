@@ -49,10 +49,7 @@ export default function AppShell() {
             )}
           </Route>
           <Route path="route/:lineId" element={<RouteProgressView />} />
-          <Route
-            path="transit/route/:routeId"
-            element={<TransitRouteView />}
-          />
+          <Route path="transit/route/:routeId" element={<TransitRouteView />} />
           <Route path="admin" element={<AdminView />} />
         </Routes>
       </Suspense>

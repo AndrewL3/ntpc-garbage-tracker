@@ -25,10 +25,7 @@ export function useBusStations(bounds: MapBounds | null) {
   });
 }
 
-export function useStationArrivals(
-  stationId: string | null,
-  city: string,
-) {
+export function useStationArrivals(stationId: string | null, city: string) {
   return useQuery({
     queryKey: ["bus-arrivals", stationId, city],
     queryFn: () => fetchStationArrivals(stationId!, city),

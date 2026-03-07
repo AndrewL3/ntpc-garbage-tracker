@@ -23,13 +23,19 @@ interface StopDetailContentProps {
   onClose?: () => void;
 }
 
-export default function StopDetailContent({ stop, onClose }: StopDetailContentProps) {
+export default function StopDetailContent({
+  stop,
+  onClose,
+}: StopDetailContentProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { data, isLoading, isError } = useRouteDetail(stop.routeLineId);
   const annotated = data?.stops.find((s) => s.rank === stop.rank);
 
-  const COLLECTION_ICONS: Record<string, { icon: typeof Trash2; title: string }> = {
+  const COLLECTION_ICONS: Record<
+    string,
+    { icon: typeof Trash2; title: string }
+  > = {
     garbage: { icon: Trash2, title: t("collection.garbage") },
     recycling: { icon: Recycle, title: t("collection.recycling") },
     foodScraps: { icon: Apple, title: t("collection.foodScraps") },
@@ -55,9 +61,7 @@ export default function StopDetailContent({ stop, onClose }: StopDetailContentPr
 
   if (!annotated) {
     return (
-      <p className="text-muted-foreground text-sm">
-        {t("stop.notAvailable")}
-      </p>
+      <p className="text-muted-foreground text-sm">{t("stop.notAvailable")}</p>
     );
   }
 
@@ -70,13 +74,17 @@ export default function StopDetailContent({ stop, onClose }: StopDetailContentPr
             <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-green-500" />
             <div className="flex flex-1 items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">{t("stop.passedAt")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("stop.passedAt")}
+                </p>
                 <p className="text-2xl font-bold tabular-nums text-green-600 dark:text-green-400">
                   {formatTime(annotated.passedAt)}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">{t("stop.scheduledTime")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("stop.scheduledTime")}
+                </p>
                 <p className="text-base tabular-nums text-muted-foreground">
                   {annotated.scheduledTime}
                 </p>
@@ -88,7 +96,9 @@ export default function StopDetailContent({ stop, onClose }: StopDetailContentPr
             <Clock className="mt-0.5 h-6 w-6 shrink-0 text-primary" />
             <div className="flex flex-1 items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">{t("stop.arrivingAround")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("stop.arrivingAround")}
+                </p>
                 <p className="text-2xl font-bold tabular-nums text-primary">
                   ~{formatTime(annotated.eta)}
                   {data?.progress.deltaMinutes != null && (
@@ -100,7 +110,9 @@ export default function StopDetailContent({ stop, onClose }: StopDetailContentPr
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">{t("stop.scheduledTime")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("stop.scheduledTime")}
+                </p>
                 <p className="text-base tabular-nums text-muted-foreground">
                   {annotated.scheduledTime}
                 </p>
@@ -111,7 +123,9 @@ export default function StopDetailContent({ stop, onClose }: StopDetailContentPr
           <div className="flex items-center gap-3">
             <Clock className="h-6 w-6 text-muted-foreground" />
             <div>
-              <p className="text-sm text-muted-foreground">{t("stop.scheduled")}</p>
+              <p className="text-sm text-muted-foreground">
+                {t("stop.scheduled")}
+              </p>
               <p className="text-2xl font-bold tabular-nums">
                 {annotated.scheduledTime}
               </p>

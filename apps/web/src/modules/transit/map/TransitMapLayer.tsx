@@ -42,8 +42,9 @@ export default function TransitMapLayer() {
   const map = useMap();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [bounds, setBounds] = useState<MapBounds | null>(null);
-  const [selectedStation, setSelectedStation] =
-    useState<BusStation | null>(null);
+  const [selectedStation, setSelectedStation] = useState<BusStation | null>(
+    null,
+  );
   const selectingRef = useRef(false);
 
   useEffect(() => {
@@ -71,10 +72,7 @@ export default function TransitMapLayer() {
 
   return (
     <>
-      <TransitMapEvents
-        onMoveEnd={handleMoveEnd}
-        onDeselect={handleDeselect}
-      />
+      <TransitMapEvents onMoveEnd={handleMoveEnd} onDeselect={handleDeselect} />
 
       {stations?.map((station) => (
         <BusStopMarker
