@@ -54,3 +54,11 @@ export {
   type BusRouteStop,
   type BusVehicle,
 } from "./tdx-bus.js";
+
+export {
+  NtcParkingSpaceRawSchema,
+  NtcParkingSpaceRawArraySchema,
+  groupSpacesIntoRoadSegments,
+  type NtcParkingSpaceRaw,
+  type ParkingRoadSegment,
+} from "./parking.js";
