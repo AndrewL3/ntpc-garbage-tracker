@@ -78,3 +78,12 @@ export {
   type NcdrFeedEntry,
   type ActiveAlert,
 } from "./ncdr-alerts.js";
+
+export {
+  AedCsvRowSchema,
+  AedCsvRowArraySchema,
+  groupAedsIntoVenues,
+  type AedCsvRow,
+  type AedDevice,
+  type AedVenue,
+} from "./aed.js";
