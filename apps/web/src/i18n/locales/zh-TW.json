@@ -7,6 +7,7 @@
     "transit": "公車",
     "parking": "停車",
     "weather": "天氣",
+    "alerts": "警報",
     "toggleTheme": "切換主題",
     "toggleLang": "切換語言"
   },
@@ -23,7 +24,8 @@
       "garbage": "垃圾車",
       "youbike": "YouBike 站點",
       "transit": "公車站",
-      "parking": "路邊停車"
+      "parking": "路邊停車",
+      "alerts": "警報"
     }
   },
   "stop": {
@@ -69,6 +71,18 @@
     "spaces": "車位",
     "full": "已滿"
   },
+  "alerts": {
+    "title": "有效警報",
+    "noAlerts": "大台北地區目前無警報",
+    "bannerMultiple": "{{count}} 則有效警報",
+    "dismiss": "關閉",
+    "severity": "嚴重程度",
+    "expires": "到期",
+    "areas": "影響地區",
+    "instruction": "注意事項",
+    "viewOfficial": "查看官方警報",
+    "sender": "來源"
+  },
   "weather": {
     "forecast": "天氣預報",
     "rainProb": "降雨機率",
@@ -113,6 +127,9 @@
     "weather": {
       "title": "天氣",
       "noData": "啟用定位以查看天氣"
+    },
+    "alerts": {
+      "title": "警報"
     }
   },
   "pwa": {

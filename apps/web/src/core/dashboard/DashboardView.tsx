@@ -3,6 +3,7 @@ import { MapPin } from "lucide-react";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { getRegisteredModules } from "../module-registry";
 import SearchBar from "../search/SearchBar";
+import AlertBanner from "@/modules/alerts/components/AlertBanner";
 
 export default function DashboardView() {
   const { t } = useTranslation();
@@ -23,6 +24,8 @@ export default function DashboardView() {
           <h1 className="text-2xl font-bold">{t("dashboard.title")}</h1>
 
           <SearchBar />
+
+          <AlertBanner />
 
           {!located && (
             <div className="rounded-xl border border-border/12 bg-card p-4 shadow-sm">

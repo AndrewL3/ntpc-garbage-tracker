@@ -7,6 +7,7 @@
     "transit": "Transit",
     "parking": "Parking",
     "weather": "Weather",
+    "alerts": "Alerts",
     "toggleTheme": "Toggle theme",
     "toggleLang": "Toggle language"
   },
@@ -23,7 +24,8 @@
       "garbage": "Garbage trucks",
       "youbike": "YouBike stations",
       "transit": "Bus stops",
-      "parking": "Street parking"
+      "parking": "Street parking",
+      "alerts": "Alerts"
     }
   },
   "stop": {
@@ -69,6 +71,18 @@
     "spaces": "spaces",
     "full": "Full"
   },
+  "alerts": {
+    "title": "Active Alerts",
+    "noAlerts": "No active alerts for Greater Taipei",
+    "bannerMultiple": "{{count}} active alerts",
+    "dismiss": "Dismiss",
+    "severity": "Severity",
+    "expires": "Expires",
+    "areas": "Affected areas",
+    "instruction": "Instructions",
+    "viewOfficial": "View official alert",
+    "sender": "Source"
+  },
   "weather": {
     "forecast": "Forecast",
     "rainProb": "Rain",
@@ -113,6 +127,9 @@
     "weather": {
       "title": "Weather",
       "noData": "Enable location for weather"
+    },
+    "alerts": {
+      "title": "Alerts"
     }
   },
   "pwa": {
