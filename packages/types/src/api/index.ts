@@ -70,3 +70,11 @@ export {
   type ForecastPeriod,
   type WeatherForecast,
 } from "./weather.js";
+
+export {
+  NcdrFeedEntrySchema,
+  NcdrFeedEntryArraySchema,
+  filterAlertsByArea,
+  type NcdrFeedEntry,
+  type ActiveAlert,
+} from "./ncdr-alerts.js";
