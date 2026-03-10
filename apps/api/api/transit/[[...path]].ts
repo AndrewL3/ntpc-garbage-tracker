@@ -6,13 +6,10 @@ import { handleRoute } from "../../src/transit/route.js";
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
-  const pathParam = req.query.path;
-  const segments = Array.isArray(pathParam)
-    ? pathParam
-    : pathParam
-      ? [pathParam]
-      : [];
-  const action = segments[0] ?? "";
+  // Parse action from URL path instead of req.query.path, which may not be
+  // populated reliably for [[...path]] catch-all routes on Vercel.
+  const urlPath = (req.url ?? "").split("?")[0];
+  const action = urlPath.replace(/^\/api\/transit\/?/, "").split("/")[0] ?? "";
 
   switch (action) {
     case "stops":
