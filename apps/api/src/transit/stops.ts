@@ -2,11 +2,12 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { redis } from "../redis.js";
 import { tdxFetch } from "../data-sources/tdx.js";
 import {
-  TdxBusStopRawArraySchema,
+  TdxStopOfRouteRawArraySchema,
+  flattenStopsOfRoute,
   groupStopsIntoStations,
   type CityKey,
   type BusStation,
-  type TdxBusStopRaw,
+  type TdxStopOfRouteRaw,
 } from "@tracker/types";
 
 const CACHE_KEY = "transit:stations";
@@ -19,19 +20,16 @@ const CITIES: { path: CityKey; code: string }[] = [
   { path: "NewTaipei", code: "NWT" },
 ];
 
-const SELECT_FIELDS =
-  "StopUID,StopName,StopPosition,StationID,RouteUID,RouteName,Direction,StopSequence";
-
 async function fetchCityStops(city: {
   path: string;
   code: string;
 }): Promise<BusStation[]> {
-  const raw = await tdxFetch<TdxBusStopRaw[]>(
-    `/v2/Bus/Stop/City/${city.path}`,
-    { $select: SELECT_FIELDS },
+  const raw = await tdxFetch<TdxStopOfRouteRaw[]>(
+    `/v2/Bus/StopOfRoute/City/${city.path}`,
   );
-  const parsed = TdxBusStopRawArraySchema.parse(raw);
-  return groupStopsIntoStations(parsed, city.code);
+  const parsed = TdxStopOfRouteRawArraySchema.parse(raw);
+  const flat = flattenStopsOfRoute(parsed);
+  return groupStopsIntoStations(flat, city.code);
 }
 
 async function getAllStations(): Promise<BusStation[]> {

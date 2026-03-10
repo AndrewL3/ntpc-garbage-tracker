@@ -8,7 +8,7 @@ const TdxNameSchema = z.object({
   En: z.string().optional().default(""),
 });
 
-// --- Stops (per-route, from /v2/Bus/Stop/City/{city}) ---
+// --- Flat stop record (internal, produced by flattenStopsOfRoute) ---
 
 export const TdxBusStopRawSchema = z.object({
   StopUID: z.string(),
@@ -22,11 +22,58 @@ export const TdxBusStopRawSchema = z.object({
   RouteName: TdxNameSchema,
   Direction: z.number(),
   StopSequence: z.number(),
-  City: z.string().optional(),
-  CityCode: z.string().optional(),
 });
 export type TdxBusStopRaw = z.infer<typeof TdxBusStopRawSchema>;
 export const TdxBusStopRawArraySchema = z.array(TdxBusStopRawSchema);
+
+// --- StopOfRoute (from /v2/Bus/StopOfRoute/City/{city}) — nested structure ---
+
+const TdxStopOfRouteStopSchema = z.object({
+  StopUID: z.string(),
+  StopName: TdxNameSchema,
+  StopPosition: z.object({
+    PositionLat: z.number(),
+    PositionLon: z.number(),
+  }),
+  StopSequence: z.number(),
+  StationID: z.string().optional(),
+});
+
+export const TdxStopOfRouteRawSchema = z.object({
+  RouteUID: z.string(),
+  RouteName: TdxNameSchema,
+  Direction: z.number(),
+  Stops: z.array(TdxStopOfRouteStopSchema),
+});
+export type TdxStopOfRouteRaw = z.infer<typeof TdxStopOfRouteRawSchema>;
+export const TdxStopOfRouteRawArraySchema = z.array(TdxStopOfRouteRawSchema);
+
+/** Flatten nested StopOfRoute into flat per-stop records. */
+export function flattenStopsOfRoute(
+  items: TdxStopOfRouteRaw[],
+): TdxBusStopRaw[] {
+  return items.flatMap((item) =>
+    item.Stops.map((stop) => ({
+      StopUID: stop.StopUID,
+      StopName: stop.StopName,
+      StopPosition: stop.StopPosition,
+      StationID: stop.StationID,
+      RouteUID: item.RouteUID,
+      RouteName: item.RouteName,
+      Direction: item.Direction,
+      StopSequence: stop.StopSequence,
+    })),
+  );
+}
+
+// --- Minimal stop (from /v2/Bus/Stop/City/{city} — physical stops only) ---
+
+export const TdxBusStopMinimalSchema = z.object({
+  StopUID: z.string(),
+  StationID: z.string().optional(),
+});
+export type TdxBusStopMinimal = z.infer<typeof TdxBusStopMinimalSchema>;
+export const TdxBusStopMinimalArraySchema = z.array(TdxBusStopMinimalSchema);
 
 // --- Estimated Time of Arrival (from /v2/Bus/EstimatedTimeOfArrival/City/{city}) ---
 

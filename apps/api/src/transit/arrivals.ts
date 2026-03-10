@@ -2,41 +2,41 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { redis } from "../redis.js";
 import { tdxFetch } from "../data-sources/tdx.js";
 import {
-  TdxBusStopRawArraySchema,
+  TdxBusStopMinimalArraySchema,
   TdxBusEtaRawArraySchema,
   transformArrivals,
   type CityKey,
-  type TdxBusStopRaw,
+  type TdxBusStopMinimal,
   type TdxBusEtaRaw,
 } from "@tracker/types";
 
-const STOPS_CACHE_KEY = "transit:stops:raw";
+const STOPS_CACHE_KEY = "transit:stops:minimal";
 const STOPS_TTL = 86400;
 const ETA_TTL = 60;
 
 const ETA_SELECT =
   "StopUID,StopName,RouteUID,RouteName,Direction,EstimateTime,StopStatus,NextBusTime";
-const STOP_SELECT = "StopUID,StationID";
 
 const VALID_CITIES: Set<string> = new Set(["Taipei", "NewTaipei"]);
 
 const SAFE_ID = /^[A-Za-z0-9_-]+$/;
 
-async function getCityStops(city: CityKey): Promise<TdxBusStopRaw[]> {
+async function getCityStops(city: CityKey): Promise<TdxBusStopMinimal[]> {
   const cacheKey = `${STOPS_CACHE_KEY}:${city}`;
-  const cached = await redis.get<TdxBusStopRaw[]>(cacheKey);
+  const cached = await redis.get<TdxBusStopMinimal[]>(cacheKey);
   if (cached) return cached;
 
-  const raw = await tdxFetch<TdxBusStopRaw[]>(`/v2/Bus/Stop/City/${city}`, {
-    $select: STOP_SELECT,
-  });
-  const parsed = TdxBusStopRawArraySchema.parse(raw);
+  const raw = await tdxFetch<TdxBusStopMinimal[]>(
+    `/v2/Bus/Stop/City/${city}`,
+    { $select: "StopUID,StationID" },
+  );
+  const parsed = TdxBusStopMinimalArraySchema.parse(raw);
   await redis.set(cacheKey, parsed, { ex: STOPS_TTL });
   return parsed;
 }
 
 function findStopUidsForStation(
-  stops: TdxBusStopRaw[],
+  stops: TdxBusStopMinimal[],
   stationId: string,
 ): Set<string> {
   const uids = new Set<string>();

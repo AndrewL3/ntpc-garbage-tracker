@@ -2,11 +2,13 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { redis } from "../redis.js";
 import { tdxFetch } from "../data-sources/tdx.js";
 import {
-  TdxBusStopRawArraySchema,
+  TdxStopOfRouteRawArraySchema,
+  flattenStopsOfRoute,
   TdxBusEtaRawArraySchema,
   TdxBusPositionRawArraySchema,
   TdxBusRouteRawArraySchema,
   type CityKey,
+  type TdxStopOfRouteRaw,
   type TdxBusStopRaw,
   type TdxBusEtaRaw,
   type TdxBusPositionRaw,
@@ -82,10 +84,9 @@ export async function handleRoute(req: VercelRequest, res: VercelResponse) {
         `transit:stops:raw:${city}`,
         CACHE_TTL_STATIC,
         () =>
-          tdxFetch<TdxBusStopRaw[]>(`/v2/Bus/Stop/City/${city}`, {
-            $select:
-              "StopUID,StopName,StopPosition,StationID,RouteUID,RouteName,Direction,StopSequence",
-          }).then((r) => TdxBusStopRawArraySchema.parse(r)),
+          tdxFetch<TdxStopOfRouteRaw[]>(
+            `/v2/Bus/StopOfRoute/City/${city}`,
+          ).then((r) => flattenStopsOfRoute(TdxStopOfRouteRawArraySchema.parse(r))),
       ),
       getCached<TdxBusEtaRaw[]>(
         `transit:etas:route:${city}:${routeId}`,
