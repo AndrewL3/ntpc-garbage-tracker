@@ -52,6 +52,26 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (!id.includes("node_modules")) return;
+          if (id.includes("/leaflet/") || id.includes("/react-leaflet/"))
+            return "vendor-map";
+          if (id.includes("/@tanstack/react-query")) return "vendor-query";
+          if (
+            id.includes("/vaul/") ||
+            id.includes("/@radix-ui/") ||
+            id.includes("/class-variance-authority/")
+          )
+            return "vendor-ui";
+          if (id.includes("/i18next/") || id.includes("/react-i18next/"))
+            return "vendor-i18n";
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       "/api": {
