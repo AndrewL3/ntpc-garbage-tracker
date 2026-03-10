@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Bike, ParkingSquare, MapPin, Clock } from "lucide-react";
+import FavoriteButton from "@/core/favorites/FavoriteButton";
 import { getAvailabilityColor } from "../utils/availability";
 import type { YouBikeStation } from "../api/client";
 
@@ -48,6 +49,15 @@ export default function StationDetailContent({
         <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
         <span>{station.address}</span>
       </div>
+
+      <FavoriteButton
+        moduleKey="youbike"
+        id={station.id}
+        label={station.name}
+        lat={station.lat}
+        lon={station.lon}
+        data={station}
+      />
 
       {/* Last updated */}
       <div className="flex items-center gap-2 px-1 text-xs text-muted-foreground">

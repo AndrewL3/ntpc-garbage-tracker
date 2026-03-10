@@ -21,4 +21,5 @@ export const garbageModule: ModuleDefinition = {
     },
   ],
   dashboardCard: GarbageDashboardCard,
+  favoritesConfig: { storageKey: "garbage" },
 };

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ParkingMeter, MapPin, Clock, DollarSign } from "lucide-react";
+import FavoriteButton from "@/core/favorites/FavoriteButton";
 import { getAvailabilityColor } from "../utils/availability";
 import type { ParkingRoadSegment } from "../api/types";
 
@@ -33,6 +34,15 @@ export default function ParkingDetailContent({
           </div>
         </div>
       </div>
+
+      <FavoriteButton
+        moduleKey="parking"
+        id={segment.roadId}
+        label={segment.roadName}
+        lat={segment.latitude}
+        lon={segment.longitude}
+        data={segment}
+      />
 
       {/* Pricing */}
       <div className="flex items-center gap-2 px-1 text-sm text-muted-foreground">

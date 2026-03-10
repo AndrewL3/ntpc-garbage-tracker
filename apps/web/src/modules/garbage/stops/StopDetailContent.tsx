@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   Clock,
 } from "lucide-react";
+import FavoriteButton from "@/core/favorites/FavoriteButton";
 import { useRouteDetail } from "../api/hooks";
 import type { NearbyStop } from "../api/client";
 
@@ -133,6 +134,15 @@ export default function StopDetailContent({
           </div>
         )}
       </div>
+
+      <FavoriteButton
+        moduleKey="garbage"
+        id={stop.routeLineId}
+        label={stop.routeLineName}
+        lat={stop.latitude}
+        lon={stop.longitude}
+        data={stop}
+      />
 
       {/* Collection type icons */}
       {annotated.collectsToday.length > 0 && (

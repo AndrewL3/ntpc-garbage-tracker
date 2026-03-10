@@ -18,4 +18,5 @@ export const facilitiesModule: ModuleDefinition = {
     },
   ],
   dashboardCard: FacilitiesDashboardCard,
+  favoritesConfig: { storageKey: "facilities" },
 };

@@ -18,4 +18,5 @@ export const youbikeModule: ModuleDefinition = {
     },
   ],
   dashboardCard: YouBikeDashboardCard,
+  favoritesConfig: { storageKey: "youbike" },
 };

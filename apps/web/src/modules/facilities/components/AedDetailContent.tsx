@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Heart, MapPin, Clock, Phone } from "lucide-react";
+import FavoriteButton from "@/core/favorites/FavoriteButton";
 import type { AedVenue } from "../api/types";
 
 interface AedDetailContentProps {
@@ -35,6 +36,15 @@ export default function AedDetailContent({ venue }: AedDetailContentProps) {
         <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
         <span>{venue.address}</span>
       </div>
+
+      <FavoriteButton
+        moduleKey="facilities"
+        id={venue.venueId}
+        label={venue.name}
+        lat={venue.lat}
+        lon={venue.lon}
+        data={venue}
+      />
 
       {/* Individual AEDs */}
       {venue.aeds.map((aed) => (

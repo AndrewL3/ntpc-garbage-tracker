@@ -18,4 +18,5 @@ export const transitModule: ModuleDefinition = {
     },
   ],
   dashboardCard: TransitDashboardCard,
+  favoritesConfig: { storageKey: "transit" },
 };

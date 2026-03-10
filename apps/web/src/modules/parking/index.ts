@@ -18,4 +18,5 @@ export const parkingModule: ModuleDefinition = {
     },
   ],
   dashboardCard: ParkingDashboardCard,
+  favoritesConfig: { storageKey: "parking" },
 };
