@@ -44,6 +44,113 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,svg,png,woff2}"],
         navigateFallback: "/index.html",
+        navigateFallbackDenylist: [/^\/api\//],
+        runtimeCaching: [
+          // Static data — cache first, long TTL
+          {
+            urlPattern: /\/api\/garbage\/taipei-stops/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "api-taipei-stops",
+              expiration: { maxAgeSeconds: 86400 },
+            },
+          },
+          {
+            urlPattern: /\/api\/transit\/stops/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "api-transit-stops",
+              expiration: { maxAgeSeconds: 86400 },
+            },
+          },
+          {
+            urlPattern: /\/api\/facilities/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "api-facilities",
+              expiration: { maxAgeSeconds: 86400 },
+            },
+          },
+          // Semi-static data — stale while revalidate
+          {
+            urlPattern: /\/api\/youbike\//,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "api-youbike",
+              expiration: { maxAgeSeconds: 120 },
+            },
+          },
+          {
+            urlPattern: /\/api\/stops/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "api-stops",
+              expiration: { maxAgeSeconds: 300 },
+            },
+          },
+          {
+            urlPattern: /\/api\/weather\//,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "api-weather",
+              expiration: { maxAgeSeconds: 1800 },
+            },
+          },
+          {
+            urlPattern: /\/api\/routes/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "api-routes",
+              expiration: { maxAgeSeconds: 120 },
+            },
+          },
+          // Real-time data — network first, fall back to cache
+          {
+            urlPattern: /\/api\/parking\//,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-parking",
+              expiration: { maxAgeSeconds: 120 },
+              networkTimeoutSeconds: 5,
+            },
+          },
+          {
+            urlPattern: /\/api\/alerts\//,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-alerts",
+              expiration: { maxAgeSeconds: 300 },
+              networkTimeoutSeconds: 5,
+            },
+          },
+          // Transit arrivals/route — network first (real-time ETAs)
+          {
+            urlPattern: /\/api\/transit\/(arrivals|route)/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-transit-realtime",
+              expiration: { maxAgeSeconds: 60 },
+              networkTimeoutSeconds: 5,
+            },
+          },
+          // Map tiles — cache first, 7-day TTL
+          {
+            urlPattern: /^https:\/\/wmts\.nlsc\.gov\.tw\//,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "map-tiles-nlsc",
+              expiration: { maxEntries: 500, maxAgeSeconds: 604800 },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/[a-d]\.basemaps\.cartocdn\.com\//,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "map-tiles-carto",
+              expiration: { maxEntries: 500, maxAgeSeconds: 604800 },
+            },
+          },
+        ],
       },
     }),
   ],
