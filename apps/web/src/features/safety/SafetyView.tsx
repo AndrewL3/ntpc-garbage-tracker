@@ -118,7 +118,9 @@ export default function SafetyView() {
             <div className="rounded-xl border border-border/12 bg-card px-4 py-3 shadow-sm">
               <div className="mb-2 flex items-center gap-2">
                 <Mountain className="h-4 w-4 text-orange-500" />
-                <h3 className="text-sm font-medium">{t("safety.earthquake")}</h3>
+                <h3 className="text-sm font-medium">
+                  {t("safety.earthquake")}
+                </h3>
               </div>
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {t("safety.earthquakeGuide")}
@@ -173,8 +175,7 @@ export default function SafetyView() {
                     {t("safety.capacity")}: {s.capacity}
                   </span>
                   <span>
-                    {t("safety.shelterType")}:{" "}
-                    {shelterTypeLabel(s.type, t)}
+                    {t("safety.shelterType")}: {shelterTypeLabel(s.type, t)}
                   </span>
                 </div>
               </div>

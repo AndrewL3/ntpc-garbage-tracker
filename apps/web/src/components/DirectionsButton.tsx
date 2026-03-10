@@ -18,10 +18,7 @@ function getDirectionsUrl(lat: number, lon: number): string {
   return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
 }
 
-export default function DirectionsButton({
-  lat,
-  lon,
-}: DirectionsButtonProps) {
+export default function DirectionsButton({ lat, lon }: DirectionsButtonProps) {
   const { t } = useTranslation();
 
   return (

@@ -41,9 +41,7 @@ export default function FavoritesDashboardSection() {
             <Heart className="h-4 w-4 shrink-0 fill-red-500 text-red-500" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{fav.label}</p>
-              <p className="text-xs text-muted-foreground">
-                {t(moduleName)}
-              </p>
+              <p className="text-xs text-muted-foreground">{t(moduleName)}</p>
             </div>
           </button>
         ))}

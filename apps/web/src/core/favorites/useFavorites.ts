@@ -88,7 +88,7 @@ export function useFavorites(moduleKey: string) {
   );
 
   const getCachedData = useCallback(
-    <T,>(id: string) => loadCachedData<T>(moduleKey, id),
+    <T>(id: string) => loadCachedData<T>(moduleKey, id),
     [moduleKey],
   );
 
