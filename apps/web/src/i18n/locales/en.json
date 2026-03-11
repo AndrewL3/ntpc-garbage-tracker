@@ -149,7 +149,7 @@
     },
     "weather": {
       "title": "Weather",
-      "noData": "Enable location for weather"
+      "noData": "Weather data unavailable"
     },
     "alerts": {
       "title": "Alerts"

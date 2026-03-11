@@ -5,75 +5,42 @@ describe("CwaForecastResponseSchema", () => {
   const validResponse = {
     success: "true",
     records: {
-      locations: [
+      Locations: [
         {
-          locationsName: "臺北市",
-          location: [
+          LocationsName: "臺北市",
+          Location: [
             {
-              locationName: "中正區",
-              geocode: "6300500",
-              lat: "25.0324",
-              lon: "121.5183",
-              weatherElement: [
+              LocationName: "中正區",
+              Geocode: "6300500",
+              Latitude: "25.0324",
+              Longitude: "121.5183",
+              WeatherElement: [
                 {
-                  elementName: "Wx",
-                  time: [
+                  ElementName: "天氣現象",
+                  Time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [
-                        { value: "多雲時晴", measures: "天氣現象" },
+                      StartTime: "2026-03-08T06:00:00+08:00",
+                      EndTime: "2026-03-08T09:00:00+08:00",
+                      ElementValue: [
+                        { Weather: "多雲時晴", WeatherCode: "02" },
                       ],
                     },
                   ],
                 },
                 {
-                  elementName: "PoP12h",
-                  time: [
+                  ElementName: "溫度",
+                  Time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "20", measures: "百分比" }],
+                      DataTime: "2026-03-08T06:00:00+08:00",
+                      ElementValue: [{ Temperature: "22" }],
                     },
-                  ],
-                },
-                {
-                  elementName: "T",
-                  time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "22", measures: "攝氏度" }],
+                      DataTime: "2026-03-08T07:00:00+08:00",
+                      ElementValue: [{ Temperature: "20" }],
                     },
-                  ],
-                },
-                {
-                  elementName: "MinT",
-                  time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "18", measures: "攝氏度" }],
-                    },
-                  ],
-                },
-                {
-                  elementName: "MaxT",
-                  time: [
-                    {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "25", measures: "攝氏度" }],
-                    },
-                  ],
-                },
-                {
-                  elementName: "CI",
-                  time: [
-                    {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "舒適", measures: "舒適度指數" }],
+                      DataTime: "2026-03-08T08:00:00+08:00",
+                      ElementValue: [{ Temperature: "24" }],
                     },
                   ],
                 },
@@ -87,15 +54,15 @@ describe("CwaForecastResponseSchema", () => {
 
   it("parses a valid CWA forecast response", () => {
     const result = CwaForecastResponseSchema.parse(validResponse);
-    expect(result.records.locations[0].location[0].locationName).toBe("中正區");
+    expect(result.records.Locations[0].Location[0].LocationName).toBe("中正區");
   });
 
   it("extracts weather elements by name", () => {
     const result = CwaForecastResponseSchema.parse(validResponse);
-    const wx = result.records.locations[0].location[0].weatherElement.find(
-      (e) => e.elementName === "Wx",
+    const wx = result.records.Locations[0].Location[0].WeatherElement.find(
+      (e) => e.ElementName === "天氣現象",
     );
-    expect(wx?.time[0].elementValue[0].value).toBe("多雲時晴");
+    expect(wx?.Time[0].ElementValue[0]?.Weather).toBe("多雲時晴");
   });
 });
 
@@ -103,75 +70,68 @@ describe("transformCwaForecast", () => {
   const makeResponse = (locationName: string) => ({
     success: "true",
     records: {
-      locations: [
+      Locations: [
         {
-          locationsName: "臺北市",
-          location: [
+          LocationsName: "臺北市",
+          Location: [
             {
-              locationName,
-              geocode: "6300500",
-              lat: "25.0324",
-              lon: "121.5183",
-              weatherElement: [
+              LocationName: locationName,
+              Geocode: "6300500",
+              Latitude: "25.0324",
+              Longitude: "121.5183",
+              WeatherElement: [
                 {
-                  elementName: "Wx",
-                  time: [
+                  ElementName: "天氣現象",
+                  Time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [
-                        { value: "多雲時晴", measures: "天氣現象" },
+                      StartTime: "2026-03-08T06:00:00+08:00",
+                      EndTime: "2026-03-08T09:00:00+08:00",
+                      ElementValue: [
+                        { Weather: "多雲時晴", WeatherCode: "02" },
                       ],
                     },
                   ],
                 },
                 {
-                  elementName: "PoP12h",
-                  time: [
+                  ElementName: "3小時降雨機率",
+                  Time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "20", measures: "百分比" }],
+                      StartTime: "2026-03-08T06:00:00+08:00",
+                      EndTime: "2026-03-08T09:00:00+08:00",
+                      ElementValue: [
+                        { ProbabilityOfPrecipitation: "20" },
+                      ],
                     },
                   ],
                 },
                 {
-                  elementName: "T",
-                  time: [
+                  ElementName: "溫度",
+                  Time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "22", measures: "攝氏度" }],
+                      DataTime: "2026-03-08T06:00:00+08:00",
+                      ElementValue: [{ Temperature: "22" }],
+                    },
+                    {
+                      DataTime: "2026-03-08T07:00:00+08:00",
+                      ElementValue: [{ Temperature: "18" }],
+                    },
+                    {
+                      DataTime: "2026-03-08T08:00:00+08:00",
+                      ElementValue: [{ Temperature: "25" }],
                     },
                   ],
                 },
                 {
-                  elementName: "MinT",
-                  time: [
+                  ElementName: "舒適度指數",
+                  Time: [
                     {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "18", measures: "攝氏度" }],
-                    },
-                  ],
-                },
-                {
-                  elementName: "MaxT",
-                  time: [
-                    {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "25", measures: "攝氏度" }],
-                    },
-                  ],
-                },
-                {
-                  elementName: "CI",
-                  time: [
-                    {
-                      startTime: "2026-03-08 06:00:00",
-                      endTime: "2026-03-08 18:00:00",
-                      elementValue: [{ value: "舒適", measures: "舒適度指數" }],
+                      DataTime: "2026-03-08T06:00:00+08:00",
+                      ElementValue: [
+                        {
+                          ComfortIndex: "22",
+                          ComfortIndexDescription: "舒適",
+                        },
+                      ],
                     },
                   ],
                 },
@@ -188,6 +148,7 @@ describe("transformCwaForecast", () => {
     const forecast = transformCwaForecast(response, "中正區");
     expect(forecast).not.toBeNull();
     expect(forecast!.township).toBe("中正區");
+    expect(forecast!.city).toBe("臺北市");
     expect(forecast!.forecast).toHaveLength(1);
     expect(forecast!.forecast[0].wx).toBe("多雲時晴");
     expect(forecast!.forecast[0].pop).toBe(20);

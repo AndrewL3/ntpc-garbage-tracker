@@ -149,7 +149,7 @@
     },
     "weather": {
       "title": "天氣",
-      "noData": "啟用定位以查看天氣"
+      "noData": "天氣資料暫時無法取得"
     },
     "alerts": {
       "title": "警報"

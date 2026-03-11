@@ -1,46 +1,42 @@
 import { z } from "zod";
 
-// --- CWA Forecast Response schema ---
-
-const CwaElementValueSchema = z.object({
-  value: z.string(),
-  measures: z.string(),
-});
+// --- CWA Forecast Response schema (PascalCase, Chinese element names) ---
 
 const CwaTimeSchema = z.object({
-  startTime: z.string(),
-  endTime: z.string(),
-  elementValue: z.array(CwaElementValueSchema),
+  DataTime: z.string().optional(),
+  StartTime: z.string().optional(),
+  EndTime: z.string().optional(),
+  ElementValue: z.array(z.record(z.string())),
 });
 
 const CwaWeatherElementSchema = z.object({
-  elementName: z.string(),
-  time: z.array(CwaTimeSchema),
+  ElementName: z.string(),
+  Time: z.array(CwaTimeSchema),
 });
 
 const CwaLocationSchema = z.object({
-  locationName: z.string(),
-  geocode: z.string(),
-  lat: z.string(),
-  lon: z.string(),
-  weatherElement: z.array(CwaWeatherElementSchema),
+  LocationName: z.string(),
+  Geocode: z.string(),
+  Latitude: z.string(),
+  Longitude: z.string(),
+  WeatherElement: z.array(CwaWeatherElementSchema),
 });
 
 const CwaLocationsSchema = z.object({
-  locationsName: z.string(),
-  location: z.array(CwaLocationSchema),
+  LocationsName: z.string(),
+  Location: z.array(CwaLocationSchema),
 });
 
 export const CwaForecastResponseSchema = z.object({
   success: z.string(),
   records: z.object({
-    locations: z.array(CwaLocationsSchema),
+    Locations: z.array(CwaLocationsSchema),
   }),
 });
 
 export type CwaForecastResponse = z.infer<typeof CwaForecastResponseSchema>;
 
-// --- Transformed types ---
+// --- Transformed types (unchanged — UI contract stays the same) ---
 
 export interface ForecastPeriod {
   startTime: string;
@@ -62,48 +58,93 @@ export interface WeatherForecast {
 // --- Transform function ---
 
 type CwaWeatherElementType = z.infer<typeof CwaWeatherElementSchema>;
-type CwaTimeType = z.infer<typeof CwaTimeSchema>;
 
-function getElementTimes(
+function findElement(
   elements: CwaWeatherElementType[],
   name: string,
-): CwaTimeType[] {
-  return elements.find((e) => e.elementName === name)?.time ?? [];
+): CwaWeatherElementType | undefined {
+  return elements.find((e) => e.ElementName === name);
 }
 
 export function transformCwaForecast(
   response: CwaForecastResponse,
   townshipName: string,
 ): WeatherForecast | null {
-  const locationsGroup = response.records.locations[0];
+  const locationsGroup = response.records.Locations[0];
   if (!locationsGroup) return null;
 
-  const location = locationsGroup.location.find(
-    (loc) => loc.locationName === townshipName,
+  const location = locationsGroup.Location.find(
+    (loc) => loc.LocationName === townshipName,
   );
   if (!location) return null;
 
-  const wxTimes = getElementTimes(location.weatherElement, "Wx");
-  const popTimes = getElementTimes(location.weatherElement, "PoP12h");
-  const tTimes = getElementTimes(location.weatherElement, "T");
-  const minTTimes = getElementTimes(location.weatherElement, "MinT");
-  const maxTTimes = getElementTimes(location.weatherElement, "MaxT");
-  const ciTimes = getElementTimes(location.weatherElement, "CI");
+  const wxElement = findElement(location.WeatherElement, "天氣現象");
+  const popElement = findElement(location.WeatherElement, "3小時降雨機率");
+  const tempElement = findElement(location.WeatherElement, "溫度");
+  const ciElement = findElement(location.WeatherElement, "舒適度指數");
 
-  const forecast: ForecastPeriod[] = wxTimes.map((wxTime, i) => ({
-    startTime: wxTime.startTime,
-    endTime: wxTime.endTime,
-    wx: wxTime.elementValue[0]?.value ?? "",
-    pop: parseInt(popTimes[i]?.elementValue[0]?.value ?? "0", 10),
-    temperature: parseInt(tTimes[i]?.elementValue[0]?.value ?? "0", 10),
-    minT: parseInt(minTTimes[i]?.elementValue[0]?.value ?? "0", 10),
-    maxT: parseInt(maxTTimes[i]?.elementValue[0]?.value ?? "0", 10),
-    ci: ciTimes[i]?.elementValue[0]?.value ?? "",
-  }));
+  if (!wxElement) return null;
+
+  // Build temp lookup: DataTime → temperature (hourly point-in-time)
+  const tempByTime = new Map<string, number>();
+  for (const t of tempElement?.Time ?? []) {
+    if (t.DataTime) {
+      tempByTime.set(
+        t.DataTime,
+        parseInt(t.ElementValue[0]?.Temperature ?? "0", 10),
+      );
+    }
+  }
+
+  // Build CI lookup: DataTime → comfort description
+  const ciByTime = new Map<string, string>();
+  for (const t of ciElement?.Time ?? []) {
+    if (t.DataTime) {
+      ciByTime.set(
+        t.DataTime,
+        t.ElementValue[0]?.ComfortIndexDescription ?? "",
+      );
+    }
+  }
+
+  // Use weather periods (3h ranges) as the base
+  const forecast: ForecastPeriod[] = wxElement.Time.map((wxTime, i) => {
+    const startTime = wxTime.StartTime ?? "";
+    const endTime = wxTime.EndTime ?? "";
+
+    // Collect hourly temps within this 3h period for min/max
+    const periodTemps: number[] = [];
+    for (const [dt, temp] of tempByTime) {
+      if (dt >= startTime && dt < endTime) {
+        periodTemps.push(temp);
+      }
+    }
+    const currentTemp =
+      periodTemps[0] ?? tempByTime.get(startTime) ?? 0;
+    const minT =
+      periodTemps.length > 0 ? Math.min(...periodTemps) : currentTemp;
+    const maxT =
+      periodTemps.length > 0 ? Math.max(...periodTemps) : currentTemp;
+
+    return {
+      startTime,
+      endTime,
+      wx: wxTime.ElementValue[0]?.Weather ?? "",
+      pop: parseInt(
+        popElement?.Time[i]?.ElementValue[0]?.ProbabilityOfPrecipitation ??
+          "0",
+        10,
+      ),
+      temperature: currentTemp,
+      minT,
+      maxT,
+      ci: ciByTime.get(startTime) ?? "",
+    };
+  });
 
   return {
     township: townshipName,
-    city: locationsGroup.locationsName,
+    city: locationsGroup.LocationsName,
     forecast,
   };
 }
