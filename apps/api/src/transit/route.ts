@@ -68,9 +68,9 @@ export async function handleRoute(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Static data (24h cache): routes + raw stops -- fetch all, filter in-memory
+    // Static data (24h cache): routes + per-route stops -- fetch per-route via $filter
     // Real-time data (60s cache): ETAs + positions -- fetch per-route via $filter
-    const [routes, allStops, routeEtas, routePositions] = await Promise.all([
+    const [routes, routeStopsRaw, routeEtas, routePositions] = await Promise.all([
       getCached<TdxBusRouteRaw[]>(
         `transit:routes:${city}`,
         CACHE_TTL_STATIC,
@@ -81,11 +81,12 @@ export async function handleRoute(req: VercelRequest, res: VercelResponse) {
           }).then((r) => TdxBusRouteRawArraySchema.parse(r)),
       ),
       getCached<TdxBusStopRaw[]>(
-        `transit:stops:v2:${city}`,
+        `transit:stops:route:${city}:${routeId}`,
         CACHE_TTL_STATIC,
         () =>
           tdxFetch<TdxStopOfRouteRaw[]>(
             `/v2/Bus/StopOfRoute/City/${city}`,
+            { $filter: `RouteUID eq '${routeId}'` },
           ).then((r) => flattenStopsOfRoute(TdxStopOfRouteRawArraySchema.parse(r))),
       ),
       getCached<TdxBusEtaRaw[]>(
@@ -137,9 +138,9 @@ export async function handleRoute(req: VercelRequest, res: VercelResponse) {
       city: routeMeta.City ?? city,
     };
 
-    // Filter stops for this route + direction, sorted by sequence
-    const routeStops = allStops
-      .filter((s) => s.RouteUID === routeId && s.Direction === direction)
+    // Filter stops by direction (already scoped to route via $filter), sorted by sequence
+    const routeStops = routeStopsRaw
+      .filter((s) => s.Direction === direction)
       .sort((a, b) => a.StopSequence - b.StopSequence);
 
     // Build ETA lookup: StopUID -> ETA entry

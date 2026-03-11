@@ -62,7 +62,7 @@ export default function TransitSchedulesView() {
         </div>
       </div>
 
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 bg-background">
         <div className="flex flex-col gap-2 p-4 md:pl-48">
           {isLoading &&
             Array.from({ length: 8 }).map((_, i) => (
