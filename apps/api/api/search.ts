@@ -7,7 +7,6 @@ import type {
   BusStation,
   YouBikeStation,
   ParkingRoadSegment,
-  AedVenue,
 } from "@tracker/types";
 
 interface SearchResult {
@@ -125,28 +124,6 @@ async function searchParking(
     }));
 }
 
-async function searchFacilities(
-  query: string,
-  limit: number,
-): Promise<SearchResult[]> {
-  const cached = await redis.get<AedVenue[]>("facilities:aed");
-  if (!cached) return [];
-
-  const q = normalize(query);
-  return cached
-    .filter(
-      (v) => normalize(v.name).includes(q) || normalize(v.address).includes(q),
-    )
-    .slice(0, limit)
-    .map((v) => ({
-      id: `facilities-${v.venueId}`,
-      title: v.name,
-      subtitle: `${v.aedCount} AED · ${v.address}`,
-      lat: v.lat,
-      lon: v.lon,
-      moduleId: "facilities",
-    }));
-}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -166,12 +143,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: true, results: cached });
     }
 
-    const [transit, garbage, youbike, parking, facilities] = await Promise.all([
+    const [transit, garbage, youbike, parking] = await Promise.all([
       searchTransit(q, 10),
       searchGarbage(q, 5),
       searchYouBike(q, 5),
       searchParking(q, 5),
-      searchFacilities(q, 5),
     ]);
 
     const results = [
@@ -179,7 +155,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ...garbage,
       ...youbike,
       ...parking,
-      ...facilities,
     ];
     await redis.set(cacheKey, results, { ex: 60 });
 

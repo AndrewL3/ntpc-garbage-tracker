@@ -8,7 +8,6 @@
     "parking": "Parking",
     "weather": "Weather",
     "alerts": "Alerts",
-    "facilities": "Facilities",
     "toggleTheme": "Toggle theme",
     "toggleLang": "Toggle language"
   },
@@ -26,8 +25,7 @@
       "youbike": "YouBike stations",
       "transit": "Bus stops",
       "parking": "Street parking",
-      "alerts": "Alerts",
-      "facilities": "AEDs"
+      "alerts": "Alerts"
     }
   },
   "stop": {
@@ -94,18 +92,6 @@
     "viewOfficial": "View official alert",
     "sender": "Source"
   },
-  "facilities": {
-    "aedCount": "{{count}} AEDs",
-    "aedSingle": "1 AED",
-    "placement": "Location",
-    "hours": "Hours",
-    "weekdays": "Mon-Fri",
-    "saturday": "Sat",
-    "sunday": "Sun",
-    "closed": "Closed",
-    "phone": "Emergency contact",
-    "category": "Category"
-  },
   "weather": {
     "forecast": "Forecast",
     "rainProb": "Rain",
@@ -153,10 +139,6 @@
     },
     "alerts": {
       "title": "Alerts"
-    },
-    "facilities": {
-      "title": "Nearest AED",
-      "noAed": "No AEDs found nearby"
     }
   },
   "pwa": {
@@ -171,8 +153,7 @@
       "garbage": "Garbage",
       "youbike": "YouBike",
       "transit": "Bus Transit",
-      "parking": "Parking",
-      "facilities": "AED"
+      "parking": "Parking"
     }
   },
   "directions": {

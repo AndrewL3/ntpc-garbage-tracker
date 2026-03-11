@@ -8,7 +8,6 @@
     "parking": "停車",
     "weather": "天氣",
     "alerts": "警報",
-    "facilities": "設施",
     "toggleTheme": "切換主題",
     "toggleLang": "切換語言"
   },
@@ -26,8 +25,7 @@
       "youbike": "YouBike 站點",
       "transit": "公車站",
       "parking": "路邊停車",
-      "alerts": "警報",
-      "facilities": "AED"
+      "alerts": "警報"
     }
   },
   "stop": {
@@ -94,18 +92,6 @@
     "viewOfficial": "查看官方警報",
     "sender": "來源"
   },
-  "facilities": {
-    "aedCount": "{{count}} 台 AED",
-    "aedSingle": "1 台 AED",
-    "placement": "放置地點",
-    "hours": "開放時間",
-    "weekdays": "週一至週五",
-    "saturday": "週六",
-    "sunday": "週日",
-    "closed": "未開放",
-    "phone": "緊急連絡電話",
-    "category": "場所分類"
-  },
   "weather": {
     "forecast": "天氣預報",
     "rainProb": "降雨機率",
@@ -153,10 +139,6 @@
     },
     "alerts": {
       "title": "警報"
-    },
-    "facilities": {
-      "title": "最近的 AED",
-      "noAed": "附近沒有 AED"
     }
   },
   "pwa": {
@@ -171,8 +153,7 @@
       "garbage": "垃圾車",
       "youbike": "YouBike",
       "transit": "公車",
-      "parking": "停車",
-      "facilities": "AED"
+      "parking": "停車"
     }
   },
   "directions": {

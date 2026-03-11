@@ -63,14 +63,6 @@ export default defineConfig({
               expiration: { maxAgeSeconds: 86400 },
             },
           },
-          {
-            urlPattern: /\/api\/facilities/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "api-facilities",
-              expiration: { maxAgeSeconds: 86400 },
-            },
-          },
           // Semi-static data — stale while revalidate
           {
             urlPattern: /\/api\/youbike\//,
