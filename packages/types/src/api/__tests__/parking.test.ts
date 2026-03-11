@@ -45,6 +45,19 @@ describe("NtcParkingSpaceRawSchema", () => {
   it("rejects missing required fields", () => {
     expect(() => NtcParkingSpaceRawSchema.parse({ ID: "1" })).toThrow();
   });
+
+  it("coerces null DAY, HOUR, and MEMO to empty string", () => {
+    const spaceWithNulls = {
+      ...validSpace,
+      DAY: null,
+      HOUR: null,
+      MEMO: null,
+    };
+    const result = NtcParkingSpaceRawSchema.parse(spaceWithNulls);
+    expect(result.DAY).toBe("");
+    expect(result.HOUR).toBe("");
+    expect(result.MEMO).toBe("");
+  });
 });
 
 describe("groupSpacesIntoRoadSegments", () => {
