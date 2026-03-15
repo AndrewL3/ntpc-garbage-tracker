@@ -1,6 +1,7 @@
-import { CircleMarker, Tooltip } from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 import { useTranslation } from "react-i18next";
-import type L from "leaflet";
+import type { LeafletMouseEvent } from "leaflet";
+import { createModuleIcon } from "@/core/map/createModuleIcon";
 import type { BusStation } from "../api/types";
 
 interface BusStopMarkerProps {
@@ -15,32 +16,25 @@ export default function BusStopMarker({
   onSelect,
 }: BusStopMarkerProps) {
   const { t } = useTranslation();
-  const color = "#3b82f6"; // blue-500
-
-  const handleClick = (e: L.LeafletMouseEvent) => {
-    const me = e as unknown as { originalEvent?: Event };
-    me.originalEvent?.stopPropagation();
-    onSelect(station);
-  };
+  const state = selected ? "selected" : "default";
 
   return (
-    <CircleMarker
-      center={[station.lat, station.lon]}
-      radius={selected ? 10 : 6}
+    <Marker
+      position={[station.lat, station.lon]}
+      icon={createModuleIcon("transit", state)}
       bubblingMouseEvents={false}
-      pathOptions={{
-        color,
-        fillColor: color,
-        fillOpacity: 0.7,
-        weight: selected ? 3 : 1,
+      eventHandlers={{
+        click: (e: LeafletMouseEvent) => {
+          e.originalEvent.stopPropagation();
+          onSelect(station);
+        },
       }}
-      eventHandlers={{ click: handleClick }}
     >
-      <Tooltip direction="top" offset={[0, -8]}>
+      <Tooltip direction="top">
         {station.name}
         {" — "}
         {station.routes.length} {t("transit.routesServed")}
       </Tooltip>
-    </CircleMarker>
+    </Marker>
   );
 }

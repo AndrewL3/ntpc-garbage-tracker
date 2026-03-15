@@ -1,8 +1,8 @@
-import { CircleMarker, Tooltip } from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 import { useTranslation } from "react-i18next";
-import type L from "leaflet";
+import type { LeafletMouseEvent } from "leaflet";
+import { createModuleIcon } from "@/core/map/createModuleIcon";
 import type { ParkingRoadSegment } from "../api/types";
-import { getAvailabilityColor } from "../utils/availability";
 
 interface ParkingMarkerProps {
   segment: ParkingRoadSegment;
@@ -16,32 +16,25 @@ export default function ParkingMarker({
   onSelect,
 }: ParkingMarkerProps) {
   const { t } = useTranslation();
-  const color = getAvailabilityColor(segment);
-
-  const handleClick = (e: L.LeafletMouseEvent) => {
-    const me = e as unknown as { originalEvent?: Event };
-    me.originalEvent?.stopPropagation();
-    onSelect(segment);
-  };
+  const state = selected ? "selected" : "default";
 
   return (
-    <CircleMarker
-      center={[segment.latitude, segment.longitude]}
-      radius={selected ? 10 : 6}
+    <Marker
+      position={[segment.latitude, segment.longitude]}
+      icon={createModuleIcon("parking", state)}
       bubblingMouseEvents={false}
-      pathOptions={{
-        color,
-        fillColor: color,
-        fillOpacity: 0.7,
-        weight: selected ? 3 : 1,
+      eventHandlers={{
+        click: (e: LeafletMouseEvent) => {
+          e.originalEvent.stopPropagation();
+          onSelect(segment);
+        },
       }}
-      eventHandlers={{ click: handleClick }}
     >
-      <Tooltip direction="top" offset={[0, -8]}>
+      <Tooltip direction="top">
         {segment.roadName}
         {" — "}
         {segment.availableSpaces}/{segment.totalSpaces} {t("parking.spaces")}
       </Tooltip>
-    </CircleMarker>
+    </Marker>
   );
 }

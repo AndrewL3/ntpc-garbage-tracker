@@ -1,6 +1,6 @@
-import { CircleMarker, Tooltip } from "react-leaflet";
-import type L from "leaflet";
-import { getRouteColor } from "@/lib/routeColor";
+import { Marker, Tooltip } from "react-leaflet";
+import type { LeafletMouseEvent } from "leaflet";
+import { createModuleIcon } from "@/core/map/createModuleIcon";
 import type { TaipeiGarbageStop } from "../api/taipei-client";
 
 interface TaipeiStopMarkerProps {
@@ -16,34 +16,25 @@ export default function TaipeiStopMarker({
   onSelect,
   faded,
 }: TaipeiStopMarkerProps) {
-  const routeColor = getRouteColor(stop.routeId);
-
-  const handleClick = (e: L.LeafletMouseEvent) => {
-    const me = e as unknown as { originalEvent?: Event };
-    me.originalEvent?.stopPropagation();
-    onSelect(stop);
-  };
+  const state = selected ? "selected" : faded ? "faded" : "default";
 
   return (
-    <CircleMarker
-      center={[stop.lat, stop.lon]}
-      radius={selected ? 12 : 7}
+    <Marker
+      position={[stop.lat, stop.lon]}
+      icon={createModuleIcon("garbage", state)}
       bubblingMouseEvents={false}
-      pathOptions={{
-        color: routeColor,
-        fillColor: routeColor,
-        fillOpacity: faded ? 0.15 : 0.7,
-        weight: selected ? 3 : 1.5,
-        opacity: faded ? 0.2 : 1,
-        dashArray: "4 3",
+      eventHandlers={{
+        click: (e: LeafletMouseEvent) => {
+          e.originalEvent.stopPropagation();
+          onSelect(stop);
+        },
       }}
-      eventHandlers={{ click: handleClick }}
     >
       {!faded && (
-        <Tooltip direction="top" offset={[0, -8]}>
+        <Tooltip direction="top">
           {stop.address} ({stop.arrivalTime})
         </Tooltip>
       )}
-    </CircleMarker>
+    </Marker>
   );
 }

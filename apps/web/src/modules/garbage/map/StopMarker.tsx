@@ -1,6 +1,7 @@
-import { CircleMarker, Marker, Tooltip } from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import { getRouteColor } from "@/lib/routeColor";
+import { createModuleIcon } from "@/core/map/createModuleIcon";
 import type { NearbyStop } from "../api/client";
 
 interface StopMarkerProps {
@@ -81,26 +82,25 @@ export default function StopMarker({
     );
   }
 
-  // Overview / other routes → CircleMarker with route color
+  // Overview mode — module icon marker
+  const state = selected ? "selected" : faded ? "faded" : "default";
   return (
-    <CircleMarker
-      center={[stop.latitude, stop.longitude]}
-      radius={selected ? 12 : 7}
+    <Marker
+      position={[stop.latitude, stop.longitude]}
+      icon={createModuleIcon("garbage", state)}
       bubblingMouseEvents={false}
-      pathOptions={{
-        color: routeColor,
-        fillColor: routeColor,
-        fillOpacity: faded ? 0.15 : 0.7,
-        weight: selected ? 3 : 1,
-        opacity: faded ? 0.2 : 1,
+      eventHandlers={{
+        click: (e: L.LeafletMouseEvent) => {
+          e.originalEvent.stopPropagation();
+          onSelect(stop);
+        },
       }}
-      eventHandlers={{ click: handleClick }}
     >
       {!faded && (
-        <Tooltip direction="top" offset={[0, -8]}>
+        <Tooltip direction="top">
           {stop.name}
         </Tooltip>
       )}
-    </CircleMarker>
+    </Marker>
   );
 }
